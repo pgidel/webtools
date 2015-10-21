@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+    <persistence-unit name="orderhelper" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+        <class>com.bierocratie.model.security.Account</class>
+
+        <class>com.bierocratie.model.Beer</class>
+        <class>com.bierocratie.model.catalog.Capacity</class>
+        <class>com.bierocratie.model.Customer</class>
+        <class>com.bierocratie.model.CustomerOrder</class>
+        <class>com.bierocratie.model.Order</class>
+        <class>com.bierocratie.model.OrderBeer</class>
+        <class>com.bierocratie.model.SupplierOrder</class>
+        <class>com.bierocratie.model.Supplier</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+            <property name="javax.persistence.jdbc.url"
+                      value="jdbc:sqlite:D:\Bierocratie\Google Drive\Outils Web\orderhelper.db"/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <!--property name="eclipselink.ddl-generation" value="drop-and-create-tables"/-->
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

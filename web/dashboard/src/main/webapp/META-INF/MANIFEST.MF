@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Class-Path: model-dashboard.jar model-common.jar validation-api-1.1.0.
+ Final.jar eclipselink-2.6.0.jar javax.persistence-2.1.0.jar commonj.s
+ do-2.1.1.jar javax.json-1.0.4.jar database-dashboard.jar web-common.j
+ ar security.jar database-common.jar shiro-core-1.2.3.jar slf4j-api-1.
+ 6.4.jar commons-beanutils-1.8.3.jar shiro-web-1.2.3.jar javax.mail-ap
+ i-1.5.3.jar activation-1.1.jar sqlite-jdbc-3.8.10.2.jar jpacontainer-
+ 3.2.0.jar vaadin-server-7.5.4.jar vaadin-sass-compiler-0.9.12.jar sac
+ -1.3.jar flute-1.3.0.gg2.jar vaadin-shared-7.5.4.jar streamhtmlparser
+ -jsilver-0.0.10.vaadin1.jar guava-16.0.1.vaadin1.jar jsoup-1.8.1.jar 
+ tableexport-for-vaadin-1.5.1.5.jar vaadin-themes-7.5.4.jar commons-io
+ -2.2.jar poi-3.10-FINAL.jar commons-codec-1.5.jar vaadin-client-compi
+ led-7.5.4.jar vaadin-push-7.5.4.jar atmosphere-runtime-2.2.7.vaadin1.
+ jar vaadin-slf4j-jdk14-1.6.1.jar tinycon-7.0.0.jar
+

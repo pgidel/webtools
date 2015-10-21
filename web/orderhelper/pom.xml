@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.bierocratie</groupId>
+        <artifactId>web</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <groupId>com.bierocratie</groupId>
+    <artifactId>orderhelper</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+    <name>Plateforme de commandes</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bierocratie</groupId>
+            <artifactId>model-orderhelper</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bierocratie</groupId>
+            <artifactId>database-orderhelper</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <outputDirectory>D:\Bierocratie\Google Drive\Outils Web\+deployment\</outputDirectory>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <projectNameTemplate>[artifactId]-[version]</projectNameTemplate>
+                    <wtpmanifest>true</wtpmanifest>
+                    <wtpapplicationxml>true</wtpapplicationxml>
+                    <wtpversion>2.0</wtpversion>
+                    <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+                </configuration>
+            </plugin-->
+            <!--plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.16.v20140903</version>
+            </plugin-->
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <configuration>
+                        <wtpversion>2.0</wtpversion>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

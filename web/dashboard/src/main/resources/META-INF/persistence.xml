@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+    <persistence-unit name="dashboard" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+
+        <class>com.bierocratie.model.catalog.Beer</class>
+        <class>com.bierocratie.model.catalog.Supplier</class>
+        <class>com.bierocratie.model.catalog.SupplierType</class>
+        <class>com.bierocratie.model.catalog.Country</class>
+        <class>com.bierocratie.model.catalog.CapacityBeer</class>
+        <class>com.bierocratie.model.catalog.Capacity</class>
+
+        <class>com.bierocratie.model.diffusion.Medium</class>
+        <class>com.bierocratie.model.diffusion.Message</class>
+        <class>com.bierocratie.model.diffusion.MediumMessage</class>
+
+        <class>com.bierocratie.model.order.Order</class>
+        <class>com.bierocratie.model.order.Stock</class>
+
+        <class>com.bierocratie.model.hoppyhours.Selection</class>
+
+        <class>com.bierocratie.model.catalog.Cask</class>
+
+        <class>com.bierocratie.model.accounting.Income</class>
+        <class>com.bierocratie.model.accounting.Invoice</class>
+        <class>com.bierocratie.model.accounting.Category</class>
+        <class>com.bierocratie.model.accounting.BudgetYear</class>
+        <class>com.bierocratie.model.accounting.Tva</class>
+        <class>com.bierocratie.model.accounting.StockValue</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:${jdbc.file}"/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <!--property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="true"/-->
+            <!--property name="eclipselink.ddl-generation" value="drop-and-create-tables"/-->
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.bierocratie</groupId>
+        <artifactId>web</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <groupId>com.bierocratie</groupId>
+    <artifactId>dashboard</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+    <name>Tableau de bord</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bierocratie</groupId>
+            <artifactId>model-dashboard</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bierocratie</groupId>
+            <artifactId>database-dashboard</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <log.appender>STDOUT</log.appender>
+                <log.level>DEBUG</log.level>
+                <jdbc.file>D:/Bierocratie/Google Drive/Outils Web/db/dashboard-test.db</jdbc.file>
+                <accounting.root>//BRCT//Factures/</accounting.root>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>gwt-maven-plugin</artifactId>
+                        <configuration>
+                            <module>com.bierocratie.ui.view.chat.ChatWidgetSetDev</module>
+                            <draftCompile>true</draftCompile>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <log.appender>FILE</log.appender>
+                <log.level>INFO</log.level>
+                <jdbc.file>F:/db/dashboard.db</jdbc.file>
+                <accounting.root>F://Factures/</accounting.root>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <version>2.4</version>
+                        <configuration>
+                            <!--outputDirectory>D:\Bierocratie\Google Drive\Outils Web\+deployment\</outputDirectory-->
+                            <failOnMissingWebXml>false</failOnMissingWebXml>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <projectNameTemplate>[project.artifactId]-[version]</projectNameTemplate>
+                    <wtpmanifest>true</wtpmanifest>
+                    <wtpapplicationxml>true</wtpapplicationxml>
+                    <wtpversion>2.0</wtpversion>
+                    <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.7.0</version>
+                <!-- contents omitted -->
+                <configuration>
+                    <!-- contents omitted -->
+                    <module>com.bierocratie.ui.view.chat.ChatWidgetSet</module>
+                </configuration>
+            </plugin>
+            <!--plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.16.v20140903</version>
+            </plugin-->
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-eclipse-plugin</artifactId>
+                    <configuration>
+                        <wtpversion>2.0</wtpversion>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
