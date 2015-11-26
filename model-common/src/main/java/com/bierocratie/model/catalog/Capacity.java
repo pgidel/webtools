@@ -18,7 +18,12 @@ import java.io.Serializable;
 @Table(name = "capacity")
 public class Capacity implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7309847797702046110L;
+
+	@Id
     @GeneratedValue
     private Long id;
 
@@ -72,6 +77,10 @@ public class Capacity implements Serializable {
         this.weight = weight;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 
     @Override
     public boolean equals(Object o) {

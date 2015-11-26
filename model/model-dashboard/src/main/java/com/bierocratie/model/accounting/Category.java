@@ -18,7 +18,12 @@ import java.io.Serializable;
 @Table(name = "category")
 public class Category implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3768194549364378014L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

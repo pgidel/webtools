@@ -7,25 +7,24 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>web</artifactId>
-        <version>1.0</version>
+        <version>${web.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>dashboard</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
+    <version>${dashboard.version}</version>
     <name>Tableau de bord</name>
 
     <dependencies>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>model-dashboard</artifactId>
-            <version>1.0</version>
+            <version>${model-dashboard.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>database-dashboard</artifactId>
-            <version>1.0</version>
+            <version>${database-dashboard.version}</version>
         </dependency>
 
         <dependency>
@@ -53,6 +52,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>gwt-maven-plugin</artifactId>
+						<version>2.7.0</version>
                         <configuration>
                             <module>com.bierocratie.ui.view.chat.ChatWidgetSetDev</module>
                             <draftCompile>true</draftCompile>
@@ -71,6 +71,14 @@
             </properties>
             <build>
                 <plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>gwt-maven-plugin</artifactId>
+						<version>2.7.0</version>
+						<configuration>
+							<module>com.bierocratie.ui.view.chat.ChatWidgetSet</module>
+						</configuration>
+					</plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
@@ -104,16 +112,6 @@
                     <wtpapplicationxml>true</wtpapplicationxml>
                     <wtpversion>2.0</wtpversion>
                     <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.7.0</version>
-                <!-- contents omitted -->
-                <configuration>
-                    <!-- contents omitted -->
-                    <module>com.bierocratie.ui.view.chat.ChatWidgetSet</module>
                 </configuration>
             </plugin>
             <!--plugin>

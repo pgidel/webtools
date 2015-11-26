@@ -9,8 +9,6 @@ import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
@@ -25,8 +23,11 @@ import com.vaadin.ui.ComboBox;
  */
 public class HoppyHoursView extends AbstractBasicModelView<Selection> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Selection.class);
-
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 9108623179370033847L;
+	
     @Override
     protected Class<Selection> getClazz() {
         return Selection.class;
@@ -105,15 +106,27 @@ public class HoppyHoursView extends AbstractBasicModelView<Selection> {
     }
 
     @Override
-    protected void preSaveProcessing(Selection item) {
+    protected void preSaveItemProcessing(Selection item) {
     }
 
     @Override
-    protected void postSaveProcessing(Selection item) {
+    protected void postSaveItemProcessing(Selection item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Selection item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

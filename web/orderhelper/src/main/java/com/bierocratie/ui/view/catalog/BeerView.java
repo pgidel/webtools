@@ -20,7 +20,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 
-@SuppressWarnings("serial")
 public class BeerView extends AbstractBasicModelView<Beer> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BeerView.class);
@@ -100,10 +99,14 @@ public class BeerView extends AbstractBasicModelView<Beer> {
     protected BeanItem<Beer> createCopiedBeanItem(Beer item) {
         Beer copy = new Beer();
         copy.setName(item.getName());
+        copy.setAbv(item.getAbv());
+        copy.setStyle(item.getStyle());
         copy.setDescription(item.getDescription());
         copy.setBrewery(item.getBrewery());
-        copy.setAvailableCapacities(item.getAvailableCapacities());
         copy.setSupplier(item.getSupplier());
+        copy.setAvailable(item.getAvailable());
+        copy.setCostHT(item.getCostHT());
+        copy.setCapacity(item.getCapacity());
         return new BeanItem<>(copy);
     }
 
@@ -120,11 +123,23 @@ public class BeerView extends AbstractBasicModelView<Beer> {
     }
 
     @Override
-    protected void preSaveProcessing(Beer item) {
+    protected void preSaveItemProcessing(Beer item) {
     }
 
     @Override
-    protected void postSaveProcessing(Beer item) {
+    protected void postSaveItemProcessing(Beer item) {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Beer item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

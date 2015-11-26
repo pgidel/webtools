@@ -19,7 +19,12 @@ import java.util.Date;
 @Table(name = "order_")
 public class Order implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2035558140707242582L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

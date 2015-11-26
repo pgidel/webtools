@@ -19,27 +19,12 @@ public class DiffusionView extends VerticalLayout implements View {
 
     private static final Logger LOG = LoggerFactory.getLogger(DiffusionView.class);
 
+    private JPAContainer<DiffusionBean> entities;
+
     public DiffusionView() {
         DashboardMenuBar menuBar = new DashboardMenuBar();
         addComponent(menuBar);
-    }
 
-    /*@Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
-    } */
-
-    protected BeanFieldGroup<DiffusionBean> binder;
-    protected Button deleteButton;
-    protected Button cancelButton;
-    protected Button addButton;
-    protected Button saveButton;
-    protected FormLayout form;
-    protected Table table;
-
-    private JPAContainer<DiffusionBean> entities;
-
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent event) {
         table = new Table("Diffusions", entities);
         table.setImmediate(true);
         table.setSelectable(true);
@@ -48,8 +33,6 @@ public class DiffusionView extends VerticalLayout implements View {
         table.setColumnHeader("date", "Date");
 
         form = new FormLayout();
-        form.setVisible(false);
-
         binder = new BeanFieldGroup<DiffusionBean>(DiffusionBean.class);
         form.addComponent(binder.buildAndBind("Message", "message"));
 
@@ -96,12 +79,25 @@ public class DiffusionView extends VerticalLayout implements View {
         addComponent(form);
     }
 
+    protected BeanFieldGroup<DiffusionBean> binder;
+    protected Button deleteButton;
+    protected Button cancelButton;
+    protected Button addButton;
+    protected Button saveButton;
+    protected FormLayout form;
+    protected Table table;
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent event) {
+        form.setVisible(false);
+    }
+
     private void prepareFormToAddNewItem() {
         addButton.setData(true);
 
         binder.discard();
 
-        binder.setItemDataSource(new BeanItem<DiffusionBean>(new DiffusionBean()));
+        binder.setItemDataSource(new BeanItem<>(new DiffusionBean()));
 
         deleteButton.setEnabled(false);
 

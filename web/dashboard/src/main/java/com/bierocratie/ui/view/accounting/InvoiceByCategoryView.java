@@ -14,14 +14,10 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 
-import javax.persistence.Entity;
 import java.io.File;
 import java.io.FileFilter;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @SuppressWarnings("serial")
 public class InvoiceByCategoryView extends VerticalLayout implements View {
@@ -32,21 +28,21 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
     private final static String ARCHIVE_PATH = ACCOUNTING_PATH + "+archives//";
     private final static String[] FOLDERS_TO_BE_IMPORTED = {"factures", "perso", "frais"};
 
-    // TODO
-    //@Inject
-    private String persistenceUnitName = "dashboard";
+    private final static String ALL_MONTH = "*";
+
+    private List<String> monthList;
+
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     // TODO
     //@Inject
-    private InvoiceDAO invoiceDAO = new InvoiceDAO(persistenceUnitName);
+    private JPAContainer<Invoice> invoiceEntities = JPAContainerFactory.make(Invoice.class, "dashboard");
+
+    private ComboBox monthsComboBox = new ComboBox("Mois");
 
     private TabSheet tabs = new TabSheet();
 
-    static {
-        if (!new File(ACCOUNTING_PATH).exists()) {
-            LOG.error("Le répertoire ["+ACCOUNTING_PATH+"] n'existe pas");
-        }
-    }
+    private Map<String, InvoiceView> invoiceViewByCategoryMap = new HashMap<>();
 
     private final static FileFilter PDF_FILTER = new FileFilter() {
         public boolean accept(File file) {
@@ -54,28 +50,42 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
         }
     };
 
-    private void importMonth(String month, JPAContainer<Invoice> entities) {
+    private void importMonth(String month) {
         if (Invoice.DEFAULT_MONTH.equals(month)) {
-            importInvoicesByMonth(ACCOUNTING_PATH, month, entities);
-        } else {
-            for (String folder : FOLDERS_TO_BE_IMPORTED) {
-                // /1501/1501-factures/
-                importInvoicesByMonth(ARCHIVE_PATH + month + File.separator + month + "-" + folder, month, entities);
+            importInvoicesByMonth(ACCOUNTING_PATH, month);
+
+        }
+        if (ALL_MONTH.equals(month)) {
+            for (String m : monthList) {
+                importFolders(m);
             }
+
+        } else {
+            importFolders(month);
+        }
+        for (Map.Entry<String, InvoiceView> entry : invoiceViewByCategoryMap.entrySet()) {
+            invoiceViewByCategoryMap.get(entry.getKey()).getEntities().refresh();
         }
     }
 
-    private void importInvoicesByMonth(String path, String month, JPAContainer<Invoice> entities) {
+    private void importFolders(String month) {
+        for (String folder : FOLDERS_TO_BE_IMPORTED) {
+            // /1501/1501-factures/
+            importInvoicesByMonth(ARCHIVE_PATH + month + File.separator + month + "-" + folder, month);
+        }
+    }
+
+    private void importInvoicesByMonth(String path, String month) {
         File file = new File(path);
         if (file.exists() && file.isDirectory()) {
             File[] fileList = file.listFiles(PDF_FILTER);
             for (File f : fileList) {
-                generateInvoice(f.getName(), month, entities);
+                generateInvoice(f.getName(), month);
             }
         }
     }
 
-    private void generateInvoice(String s, String month, JPAContainer<Invoice> entities) {
+    private void generateInvoice(String s, String month) {
         try {
             // [type_yymmdd_fournisseur-montant.pdf]
             s = s.replace(".pdf", "").replace(".PDF", "");
@@ -83,18 +93,16 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
             Invoice invoice = new Invoice(t[0], t[1], t[2].split(" ")[0], month, true);
             Invoice i = invoiceDAO.find(invoice.getD(), invoice.getSupplier(), invoice.getAmount());
             if (i == null) {
-                entities.addEntity(invoice);
+                invoiceEntities.addEntity(invoice);
             } else if (!month.equals(i.getMonth())) {
                 i.setMonth(month);
-                entities.addEntity(i);
+                invoiceEntities.addEntity(i);
             }
         } catch (SQLException e) {
             Notification.show("Erreur d'accès aux données", e.getMessage(), Notification.Type.ERROR_MESSAGE);
             LOG.error(e.getMessage(), e);
         }
     }
-
-    private ComboBox monthsComboBox = new ComboBox("Mois");
 
     private List<String> generateMonthList() {
         File file = new File(ARCHIVE_PATH);
@@ -104,7 +112,7 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
 
         List<String> months = new ArrayList<>();
         for (String m : file.list()) {
-            // Past years (<n-1) are labelled 01, 02, etc.
+            // Past years (<n-1) are labelled 01-xxxx, 02-xxxx, etc.
             if (m.length() == 4) {
                 months.add(m);
             }
@@ -113,42 +121,29 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
         return months;
     }
 
-    // TODO
-    //@Inject
-    private JPAContainer<Invoice> invoiceEntities = JPAContainerFactory.make(Invoice.class, persistenceUnitName);
-
-    // TODO
-    //@Inject
-    private JPAContainer<Category> categories = JPAContainerFactory.make(Category.class, "dashboard");
-
-    // TODO
-    //@Inject
-    private JPAContainer<BudgetYear> budgetYears = JPAContainerFactory.make(BudgetYear.class, "dashboard");
+    private Button importMonthButton = new Button("Importer", new Button.ClickListener() {
+        @Override
+        public void buttonClick(Button.ClickEvent clickEvent) {
+            importMonth((String) monthsComboBox.getValue());
+        }
+    });
 
     public InvoiceByCategoryView() {
         DashboardMenuBar dashboardMenuBar = new DashboardMenuBar();
         addComponent(dashboardMenuBar);
-    }
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         HorizontalLayout importInvoiceLayout = new HorizontalLayout();
 
-        monthsComboBox.addItem(Invoice.DEFAULT_MONTH);
-        monthsComboBox.addItems(generateMonthList());
         monthsComboBox.setNullSelectionAllowed(false);
-        monthsComboBox.setValue(Invoice.DEFAULT_MONTH);
         importInvoiceLayout.addComponent(monthsComboBox);
 
-        Button importMonthButton = new Button("Importer", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                importMonth((String) monthsComboBox.getValue(), invoiceEntities);
-            }
-        });
         importInvoiceLayout.addComponent(importMonthButton);
 
         String currentMonth = BudgetYear.getCurrentMonth();
+
+        // TODO
+        //@Inject
+        JPAContainer<BudgetYear> budgetYears = JPAContainerFactory.make(BudgetYear.class, "dashboard");
         budgetYears.addContainerFilter(new Compare.LessOrEqual("lastMonth", currentMonth));
         if (!budgetYears.getItemIds().isEmpty()) {
 
@@ -157,19 +152,56 @@ public class InvoiceByCategoryView extends VerticalLayout implements View {
             budgetYears.sort(new String[]{"year"}, new boolean[]{false});
             BudgetYear currentBudgetYear = budgetYears.getItem(budgetYears.firstItemId()).getEntity();
 
+            // TODO
+            //@Inject
+            JPAContainer<Category> categories = JPAContainerFactory.make(Category.class, "dashboard");
+
             Category emptyCategory = new Category();
-            InvoiceView emptyInvoiceView = new InvoiceView(emptyCategory, currentBudgetYear);
-            tabs.addTab(emptyInvoiceView, emptyCategory.getName());
+            addTab(emptyCategory, currentBudgetYear);
             for (Object id : categories.getItemIds()) {
                 Category category = categories.getItem(id).getEntity();
-                InvoiceView invoiceView = new InvoiceView(category, currentBudgetYear);
-                tabs.addTab(invoiceView, category.getName());
+                addTab(category, currentBudgetYear);
             }
 
             addComponent(tabs);
         }
+    }
 
-        importMonth(Invoice.DEFAULT_MONTH, invoiceEntities);
+    private void addTab(Category category, BudgetYear currentBudgetYear) {
+        InvoiceView invoiceView = new InvoiceView(category, currentBudgetYear, this);
+        tabs.addTab(invoiceView, category.getName());
+        invoiceViewByCategoryMap.put(category.getName(), invoiceView);
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        if (!new File(ACCOUNTING_PATH).exists()) {
+            LOG.error("Le répertoire [{}] n'existe pas", ACCOUNTING_PATH);
+            Notification.show("Le répertoire [" + ACCOUNTING_PATH + "] n'existe pas", Notification.Type.ERROR_MESSAGE);
+
+            setImportEnable(false);
+
+        } else {
+            monthList = generateMonthList();
+
+            setImportEnable(true);
+
+            monthsComboBox.removeAllItems();
+            monthsComboBox.addItem(Invoice.DEFAULT_MONTH);
+            monthsComboBox.addItems(monthList);
+            monthsComboBox.addItems(ALL_MONTH);
+            monthsComboBox.setValue(Invoice.DEFAULT_MONTH);
+            monthsComboBox.setPageLength(monthList.size() + 2);
+        }
+    }
+
+    private void setImportEnable(boolean enable) {
+        importMonthButton.setEnabled(enable);
+        monthsComboBox.setEnabled(enable);
+    }
+
+    public Map<String, InvoiceView> getInvoiceViewByCategoryMap() {
+        return invoiceViewByCategoryMap;
     }
 
 }

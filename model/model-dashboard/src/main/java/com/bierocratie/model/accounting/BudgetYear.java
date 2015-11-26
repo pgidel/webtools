@@ -52,7 +52,11 @@ public class BudgetYear {
     private static final SimpleDateFormat monthFormatter = new SimpleDateFormat("yyMM");
 
     public static String getCurrentMonth() {
-        return monthFormatter.format(new Date());
+        return getMonth(new Date());
+    }
+
+    public static String getMonth(Date date) {
+        return monthFormatter.format(date);
     }
 
     public boolean isCurrentYear() {

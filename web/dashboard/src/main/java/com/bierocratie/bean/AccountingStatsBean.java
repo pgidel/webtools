@@ -1,7 +1,15 @@
 package com.bierocratie.bean;
 
+import com.bierocratie.model.accounting.BudgetYear;
+import com.bierocratie.model.accounting.Income;
+import com.bierocratie.model.accounting.Tva;
+import com.vaadin.addon.jpacontainer.JPAContainer;
+import com.vaadin.addon.jpacontainer.JPAContainerFactory;
+import com.vaadin.data.util.filter.Compare;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Calendar;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +28,8 @@ public class AccountingStatsBean {
     private BigDecimal marginTTC = BigDecimal.ZERO;
     private BigDecimal yieldRatio = BigDecimal.ZERO;
     private BigDecimal marginRatio = BigDecimal.ZERO;
-    private BigDecimal deltaStock = BigDecimal.ZERO;
+    private BigDecimal deltaStockHT = BigDecimal.ZERO;
+    private BigDecimal deltaStockTTC = BigDecimal.ZERO;
 
     public AccountingStatsBean(BigDecimal turnoverHT, BigDecimal turnoverTTC, BigDecimal invoicesHT, BigDecimal invoicesTTC, BigDecimal currentStock, BigDecimal previousStock, BigDecimal stockPurchase) {
         this.turnoverHT = turnoverHT;
@@ -28,12 +37,25 @@ public class AccountingStatsBean {
         this.invoicesHT = invoicesHT;
         this.invoicesTTC = invoicesTTC;
 
-        this.deltaStock = currentStock.subtract(previousStock);
+        final JPAContainer<Income> incomes = JPAContainerFactory.make(Income.class, "dashboard");
+        incomes.addContainerFilter(new Compare.Equal("month", BudgetYear.getCurrentMonth()));
+        while (incomes.size() == 0) {
+            incomes.removeAllContainerFilters();
 
-        this.marginHT = turnoverHT.subtract(invoicesHT.subtract(deltaStock));
-        this.marginTTC = turnoverTTC.subtract(invoicesTTC.subtract(deltaStock.multiply(new BigDecimal(1.2))));
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -1);
 
-        BigDecimal stockPurchaseMinusDelta = stockPurchase.subtract(deltaStock);
+            incomes.addContainerFilter(new Compare.Equal("month", BudgetYear.getMonth(cal.getTime())));
+        }
+        Tva tva = incomes.getItem(incomes.firstItemId()).getEntity().getTva();
+
+        this.deltaStockHT = currentStock.subtract(previousStock);
+        this.deltaStockTTC = this.deltaStockHT.multiply(BigDecimal.ONE.add(tva.getRate()));
+
+        this.marginHT = turnoverHT.subtract(invoicesHT.subtract(deltaStockHT));
+        this.marginTTC = turnoverTTC.subtract(invoicesTTC.subtract(deltaStockTTC));
+
+        BigDecimal stockPurchaseMinusDelta = stockPurchase.subtract(deltaStockHT);
         BigDecimal grossMargin = turnoverHT.subtract(stockPurchaseMinusDelta);
 
         if (!turnoverHT.equals(BigDecimal.ZERO)) {
@@ -76,8 +98,12 @@ public class AccountingStatsBean {
         return marginRatio;
     }
 
-    public BigDecimal getDeltaStock() {
-        return deltaStock;
+    public BigDecimal getDeltaStockHT() {
+        return deltaStockHT;
+    }
+
+    public BigDecimal getDeltaStockTTC() {
+        return deltaStockTTC;
     }
 
 }

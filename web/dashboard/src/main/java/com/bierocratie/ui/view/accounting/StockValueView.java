@@ -10,8 +10,6 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
@@ -19,8 +17,6 @@ import com.vaadin.ui.ComboBox;
 
 @SuppressWarnings("serial")
 public class StockValueView extends AbstractBasicModelView<StockValue> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(StockValueView.class);
 
     public StockValueView() {
         table.sort(new Object[]{"year"}, new boolean[]{false});
@@ -104,15 +100,27 @@ public class StockValueView extends AbstractBasicModelView<StockValue> {
     }
 
     @Override
-    protected void preSaveProcessing(StockValue item) {
+    protected void preSaveItemProcessing(StockValue item) {
     }
 
     @Override
-    protected void postSaveProcessing(StockValue item) {
+    protected void postSaveItemProcessing(StockValue item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(StockValue item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

@@ -21,7 +21,12 @@ import java.security.NoSuchAlgorithmException;
 @Table(name = "beer")
 public class Account implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 348649569997793590L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

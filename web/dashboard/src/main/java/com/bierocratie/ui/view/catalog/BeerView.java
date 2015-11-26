@@ -1,5 +1,7 @@
 package com.bierocratie.ui.view.catalog;
 
+import com.bierocratie.model.accounting.BudgetYear;
+import com.bierocratie.model.accounting.Income;
 import com.bierocratie.model.accounting.Tva;
 import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.catalog.Capacity;
@@ -19,11 +21,9 @@ import com.vaadin.data.util.filter.Or;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Field;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,7 +37,34 @@ import java.math.RoundingMode;
  */
 public class BeerView extends AbstractBasicModelView<Beer> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BeerView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3674580658357199906L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(BeerView.class);
+
+    private BigDecimal sellingTva;
+
+    final JPAContainer<Income> incomes = JPAContainerFactory.make(Income.class, "dashboard");
+
+    public BeerView() {
+        incomes.addContainerFilter(new Compare.Equal("month", BudgetYear.getCurrentMonth()));
+        while (incomes.size() == 0) {
+            incomes.removeAllContainerFilters();
+
+            java.util.Calendar cal = java.util.Calendar.getInstance();
+            cal.add(java.util.Calendar.MONTH, -1);
+
+            incomes.addContainerFilter(new Compare.Equal("month", BudgetYear.getMonth(cal.getTime())));
+        }
+        Tva tva = incomes.getItem(incomes.firstItemId()).getEntity().getTva();
+
+        sellingTva = BigDecimal.ONE.add(tva.getRate());
+
+        table.setMultiSelect(true);
+        table.setMultiSelectMode(MultiSelectMode.SIMPLE);
+    }
 
     @Override
     protected Class<Beer> getClazz() {
@@ -58,14 +85,14 @@ public class BeerView extends AbstractBasicModelView<Beer> {
     private ComboBox supplierComboBox;
     private ComboBox breweryComboBox;
     private ComboBox capacityComboBox;
-    private ComboBox tvaComboBox;
+
+    private CheckBox availableForMultiBeersCheckBox;
 
     @Override
     // TODO Choisir le fournisseur si différent du brasseur
     protected void buildAndBind() {
         form.addComponent(binder.buildAndBind("Nom", "name"));
         form.addComponent(binder.buildAndBind("Style", "style"));
-        form.addComponent(binder.buildAndBind("Origine", "region"));
         form.addComponent(binder.buildAndBind("Degré alcool", "abv"));
 
         // FIXME pb accès persistenceUnitName
@@ -119,6 +146,10 @@ public class BeerView extends AbstractBasicModelView<Beer> {
 
         form.addComponent(binder.buildAndBind("Achat HT", "costHT"));
 
+        Field costingPriceHTField = binder.buildAndBind("Coûtant HT", "costingPriceHT");
+        costingPriceHTField.setEnabled(false);
+        form.addComponent(costingPriceHTField);
+
         Field costingPriceTTCField = binder.buildAndBind("Coûtant TTC", "costingPriceTTC");
         costingPriceTTCField.setEnabled(false);
         form.addComponent(costingPriceTTCField);
@@ -130,20 +161,6 @@ public class BeerView extends AbstractBasicModelView<Beer> {
         Field priceTTCField = binder.buildAndBind("Prix TTC", "priceTTC");
         priceTTCField.setEnabled(false);
         form.addComponent(priceTTCField);
-
-        // FIXME pb accès persistenceUnitName
-        //final JPAContainer<Supplier> suppliers = JPAContainerFactory.make(Supplier.class, persistenceUnitName);
-        final JPAContainer<Tva> tvas = JPAContainerFactory.make(Tva.class, "dashboard");
-        tvaComboBox = new ComboBox("TVA");
-        tvaComboBox.setContainerDataSource(tvas);
-        tvaComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
-        tvaComboBox.setItemCaptionPropertyId("rate2String");
-        tvaComboBox.setConverter(new SingleSelectConverter<Tva>(tvaComboBox));
-        tvaComboBox.setFilteringMode(FilteringMode.CONTAINS);
-        tvaComboBox.setImmediate(true);
-        tvaComboBox.setRequired(true);
-        binder.bind(tvaComboBox, "tva");
-        form.addComponent(tvaComboBox);
     }
 
     @Override
@@ -157,13 +174,7 @@ public class BeerView extends AbstractBasicModelView<Beer> {
 
     @Override
     protected BeanItem<Beer> createNewBeanItem() {
-        Beer beer = new Beer();
-
-        final JPAContainer<Tva> tvas = JPAContainerFactory.make(Tva.class, "dashboard");
-        tvas.addContainerFilter(new Compare.Equal("rate", new BigDecimal(0.2)));
-        beer.setTva(tvas.getItem(tvas.firstItemId()).getEntity());
-
-        return new BeanItem<>(beer);
+        return new BeanItem<>(new Beer());
     }
 
     @Override
@@ -177,63 +188,82 @@ public class BeerView extends AbstractBasicModelView<Beer> {
         copy.setSupplier(item.getSupplier());
         copy.setCostHT(item.getCostHT());
         copy.setAbv(item.getAbv());
-        copy.setTva(item.getTva());
         copy.setCapacity(item.getCapacity());
         return new BeanItem<>(copy);
     }
 
     @Override
     protected void setTableColumns() {
-        entities.addNestedContainerProperty("capacity.name");
-
-        table.setVisibleColumns(new String[]{"brewery", "name", "style", "abv", "capacity.name"});
+        table.setVisibleColumns(new String[]{"brewery", "name", "style", "abv", "capacity", "available"});
         table.setColumnHeader("brewery", "Brasserie");
         table.setColumnHeader("name", "Nom");
         table.setColumnHeader("style", "Style");
         table.setColumnHeader("abv", "Degré Alcool");
-        table.setColumnHeader("capacity.name", "Volume");
+        table.setColumnHeader("capacity", "Volume");
+        table.setColumnHeader("available", "Disponible");
     }
 
     @Override
     protected void addDataToItem(Beer item) throws Exception {
     }
 
-    // FIXME
-    private double marginPerLiterCask = 2.5;
-    private double marginPerLiterBeer = 3;
-    private BigDecimal incrementCask = new BigDecimal(5);
-    private BigDecimal invoiceTva = new BigDecimal(1.2);
-
     @Override
-    protected void preSaveProcessing(Beer item) {
+    protected void preSaveItemProcessing(Beer item) {
         if (item.getCapacity() == null) {
             return;
         }
 
-        BigDecimal itemTva = BigDecimal.ONE;
-        if (item.getTva() != null) {
-            itemTva = itemTva.add(item.getTva().getRate());
-        }
+        Supplier supplier = item.getSupplier() != null ? item.getSupplier() : item.getBrewery();
 
         if ("20L".equals(item.getCapacity().getName()) || "30L".equals(item.getCapacity().getName())) {
-            item.setCostingPriceTTC(item.getCostHT().multiply(itemTva).setScale(-1, RoundingMode.CEILING));
-            BigDecimal priceHT = item.getCostHT().add(new BigDecimal(marginPerLiterCask * item.getCapacity().getSize()));
-            item.setPriceTTC(priceHT.multiply(invoiceTva).divide(incrementCask, 0, RoundingMode.HALF_UP).multiply(incrementCask));
+            BigDecimal costingHT = item.getCostHT().add(costingMarginPerLiterCask.multiply(new BigDecimal(item.getCapacity().getSize())));
+            item.setCostingPriceTTC(costingHT.multiply(sellingTva).divide(costingIncrementCask, 0, RoundingMode.CEILING).multiply(costingIncrementCask));
+
+            BigDecimal priceHT = item.getCostHT().add(marginPerLiterCask.multiply(new BigDecimal(item.getCapacity().getSize())));
+            item.setPriceTTC(priceHT.multiply(sellingTva).divide(incrementCask, 0, RoundingMode.CEILING).multiply(incrementCask));
         } else {
-            item.setCostingPriceTTC(item.getCostHT().multiply(itemTva).setScale(1, RoundingMode.CEILING));
-            BigDecimal priceHT = item.getCostHT().add(new BigDecimal(marginPerLiterBeer * item.getCapacity().getSize()));
-            item.setPriceTTC(priceHT.multiply(invoiceTva).setScale(1, RoundingMode.CEILING));
+            item.setCostingPriceTTC(item.getCostHT().multiply(sellingTva).setScale(1, RoundingMode.CEILING));
+            //item.setCostingPriceTTC(item.getCostHT().multiply(sellingTva).divide(incrementBottle, 0, RoundingMode.CEILING).multiply(incrementBottle));
+            BigDecimal priceHT = item.getCostHT().add(marginPerLiterBeer.multiply(new BigDecimal(item.getCapacity().getSize())));
+            item.setPriceTTC(priceHT.multiply(sellingTva).setScale(1, RoundingMode.CEILING));
         }
 
-        item.setPriceHT(item.getPriceTTC().divide(invoiceTva, 2, RoundingMode.HALF_UP));
+        item.setCostingPriceHT(item.getCostingPriceTTC().divide(sellingTva, 2, RoundingMode.HALF_UP));
+        item.setPriceHT(item.getPriceTTC().divide(sellingTva, 2, RoundingMode.HALF_UP));
     }
 
+    // TODO
+    private BigDecimal costingIncrementCask = new BigDecimal(10);
+    private BigDecimal costingMarginPerLiterCask = BigDecimal.ZERO;
+    private BigDecimal marginPerLiterCask = new BigDecimal(2.5);
+    private BigDecimal marginPerLiterBeer = new BigDecimal(3);
+    private BigDecimal incrementCask = new BigDecimal(5);
+    private BigDecimal incrementBottle = new BigDecimal(0.1);
+
     @Override
-    protected void postSaveProcessing(Beer item) {
+    protected void postSaveItemProcessing(Beer item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+        availableForMultiBeersCheckBox = new CheckBox("Disponibles");
+        multiSelectForm.addComponent(availableForMultiBeersCheckBox);
+    }
+
+    private boolean availability;
+
+    @Override
+    protected void getMultiFormValues() {
+        availability = availableForMultiBeersCheckBox.getValue();
+    }
+
+    @Override
+    protected void setItemValues(Beer item) {
+        item.setAvailable(availability);
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

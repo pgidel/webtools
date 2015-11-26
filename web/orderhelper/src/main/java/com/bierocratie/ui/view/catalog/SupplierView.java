@@ -16,7 +16,6 @@ import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 
-@SuppressWarnings("serial")
 public class SupplierView extends AbstractBasicModelView<Supplier> {
 
     private static final Logger LOG = LoggerFactory.getLogger(SupplierView.class);
@@ -95,19 +94,30 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
     }
 
     @Override
-    protected void postSaveProcessing(Supplier item) {
+    protected void postSaveItemProcessing(Supplier item) {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Supplier item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override
     protected BeanItem<Supplier> createNewBeanItem() {
         Supplier newItem = new Supplier();
         refreshContainerFilters(newItem);
-        return new BeanItem<Supplier>(newItem);
+        return new BeanItem<>(newItem);
     }
 
     @Override
     protected void createMultiSelectForm() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -124,6 +134,10 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
 
     @Override
     protected void addDataToItem(Supplier item) throws Exception {
+    }
+
+    @Override
+    protected void preSaveItemProcessing(Supplier item) {
     }
 
 

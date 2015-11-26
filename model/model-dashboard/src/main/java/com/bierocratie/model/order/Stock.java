@@ -18,7 +18,12 @@ import java.io.Serializable;
 @Table(name = "stock")
 public class Stock implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3334078660947208736L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

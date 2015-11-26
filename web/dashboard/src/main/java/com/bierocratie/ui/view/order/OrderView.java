@@ -1,6 +1,5 @@
 package com.bierocratie.ui.view.order;
 
-import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.catalog.Supplier;
 import com.bierocratie.model.order.Order;
 import com.bierocratie.model.order.Stock;
@@ -8,7 +7,6 @@ import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.component.Table;
 import com.bierocratie.ui.component.TextArea;
-import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.addon.jpacontainer.EntityItem;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
@@ -37,9 +35,14 @@ import java.util.List;
  * Time: 00:04
  * To change this template use File | Settings | File Templates.
  */
-public class OrderView extends AbstractBasicModelView<Order> {
+public class OrderView extends com.bierocratie.ui.view.AbstractBasicModelView<Order> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6445017708120490954L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(OrderView.class);
 
     @Override
     protected Class<Order> getClazz() {
@@ -64,7 +67,12 @@ public class OrderView extends AbstractBasicModelView<Order> {
     @Override
     protected void buildAndBind() {
         class CsvUploader implements Upload.Receiver {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 4666176089332721321L;
+
+			@Override
             public OutputStream receiveUpload(String filename, String mimeType) {
                 if (!filename.endsWith(".csv")) {
                     new Notification("Le fichier n'est pas un CSV", null, Notification.Type.TRAY_NOTIFICATION).show(Page.getCurrent());
@@ -81,16 +89,21 @@ public class OrderView extends AbstractBasicModelView<Order> {
                 }
             }
         }
-        ;
 
         Upload upload = new Upload("Importer", new CsvUploader());
         upload.addFinishedListener(new Upload.FinishedListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 79970017207598431L;
+
+			@Override
             public void uploadFinished(Upload.FinishedEvent event) {
                 List<Stock> stockList = new ArrayList<>();
-                try (BufferedReader in = new BufferedReader(new FileReader(tempFile));) {
+                try (BufferedReader in = new BufferedReader(new FileReader(tempFile))) {
                     // Header
-                    String line = in.readLine();
+                    in.readLine();
+                    String line;
                     while ((line = in.readLine()) != null) {
                         String[] tab = line.split(";");
                         // supplierCode must exist
@@ -117,13 +130,23 @@ public class OrderView extends AbstractBasicModelView<Order> {
             }
         });
         upload.addStartedListener(new Upload.StartedListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 6735337066172067236L;
+
+			@Override
             public void uploadStarted(Upload.StartedEvent startedEvent) {
 
             }
         });
         upload.addFailedListener(new Upload.FailedListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 4110055512302992333L;
+
+			@Override
             public void uploadFailed(Upload.FailedEvent failedEvent) {
 
             }
@@ -143,7 +166,12 @@ public class OrderView extends AbstractBasicModelView<Order> {
         binder.bind(supplierComboBox, "supplier");
         form.addComponent(supplierComboBox);
         supplierComboBox.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 528875860617603291L;
+
+			@Override
             public void valueChange(Property.ValueChangeEvent event) {
                 Object itemId = event.getProperty().getValue();
                 if (itemId != null) {
@@ -207,17 +235,28 @@ public class OrderView extends AbstractBasicModelView<Order> {
     }
 
     @Override
-    protected void preSaveProcessing(Order item) {
+    protected void preSaveItemProcessing(Order item) {
     }
 
     @Override
-    protected void postSaveProcessing(Order item) {
+    protected void postSaveItemProcessing(Order item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
     }
 
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Order item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
+    }
 
     @Override
     public void enter(ViewChangeListener.ViewChangeEvent event) {

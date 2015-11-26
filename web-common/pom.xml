@@ -7,23 +7,29 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>webtools</artifactId>
-        <version>1.0</version>
+        <version>${webtools.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>web-common</artifactId>
-    <version>1.0</version>
+    <version>${web-common.version}</version>
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>9.0.0.M1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>security</artifactId>
-            <version>1.0</version>
+            <version>${security.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>database-common</artifactId>
-            <version>1.0</version>
+            <version>${database-common.version}</version>
         </dependency>
 
         <dependency>
@@ -48,6 +54,11 @@
             <artifactId>tableexport-for-vaadin</artifactId>
             <version>${tableexport-for-vaadin.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.vaadin.addons</groupId>
@@ -58,12 +69,6 @@
             <groupId>org.vaadin.addons</groupId>
             <artifactId>webnotifications</artifactId>
             <version>${webnotifications.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-push</artifactId>
-            <version>${vaadin.version}</version>
         </dependency>
 
         <dependency>
@@ -93,12 +98,12 @@
             <artifactId>vaadin-themes</artifactId>
             <version>${vaadin.version}</version>
         </dependency>
-		
-		<dependency>
-			<groupId>org.vaadin.addons</groupId>
-			<artifactId>tinycon</artifactId>
-			<version>${tinycon.version}</version>
-		</dependency>
+
+        <dependency>
+            <groupId>org.vaadin.addons</groupId>
+            <artifactId>tinycon</artifactId>
+            <version>${tinycon.version}</version>
+        </dependency>
 
         <!--dependency>
             <groupId>ru.xpoft.vaadin</groupId>

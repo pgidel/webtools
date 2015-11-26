@@ -1,5 +1,7 @@
 package com.bierocratie.model.catalog;
 
+import com.bierocratie.model.accounting.Tva;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -18,7 +20,12 @@ import java.util.List;
 @Table(name = "supplier")
 public class Supplier implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5404170589116588115L;
+
+	@Id
     @GeneratedValue
     private Long id;
 
@@ -32,6 +39,7 @@ public class Supplier implements Serializable {
     @NotNull
     private String code;
 
+    @NotNull
     private String region;
 
     private String address;
@@ -47,8 +55,17 @@ public class Supplier implements Serializable {
     @OneToMany
     private List<Beer> beers = new ArrayList<>();
 
+    private Tva tva;
+
     @Lob
     private String tastingNotes;
+
+    public Supplier() {
+    }
+
+    public Supplier(Tva tva) {
+        this.tva = tva;
+    }
 
     @Override
     public String toString() {
@@ -150,6 +167,14 @@ public class Supplier implements Serializable {
 
     public void setBeers(List<Beer> beers) {
         this.beers = beers;
+    }
+
+    public Tva getTva() {
+        return tva;
+    }
+
+    public void setTva(Tva tva) {
+        this.tva = tva;
     }
 
     public String getTastingNotes() {

@@ -1,20 +1,14 @@
 package com.bierocratie.ui.view.catalog;
 
-import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.catalog.Capacity;
 import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.ComboBox;
 
 @SuppressWarnings("serial")
 public class CapacityView extends AbstractBasicModelView<Capacity> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CapacityView.class);
 
     @Override
     protected Class<Capacity> getClazz() {
@@ -31,8 +25,6 @@ public class CapacityView extends AbstractBasicModelView<Capacity> {
         // FIXME @Inject
         return new DashboardMenuBar();
     }
-
-    private ComboBox comboBox;
 
     @Override
     protected void buildAndBind() {
@@ -77,15 +69,27 @@ public class CapacityView extends AbstractBasicModelView<Capacity> {
     }
 
     @Override
-    protected void preSaveProcessing(Capacity item) {
+    protected void preSaveItemProcessing(Capacity item) {
     }
 
     @Override
-    protected void postSaveProcessing(Capacity item) {
+    protected void postSaveItemProcessing(Capacity item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Capacity item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

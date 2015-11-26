@@ -30,7 +30,11 @@ import java.util.List;
  */
 public abstract class AbstractBasicModelView<T> extends VerticalLayout implements View {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractBasicModelView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8996906514432948152L;
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractBasicModelView.class);
 
     protected abstract String getTableName();
 
@@ -57,6 +61,7 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
     protected Button cancelButton;
     protected Button addButton;
     protected Button saveButton;
+    protected Button multiSaveButton;
     protected Button copyButton;
     protected FormLayout form;
     protected FormLayout multiSelectForm;
@@ -98,36 +103,72 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
         form = new FormLayout();
         form.setVisible(false);
 
-        binder = new BeanFieldGroup<T>(getClazz());
+        binder = new BeanFieldGroup<>(getClazz());
 
         buildAndBind();
 
         deleteButton = new Button("Supprimer", new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 7001530510654157803L;
+
+			@Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 deleteItem();
             }
         });
         cancelButton = new Button("Annuler", new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 2006290619297966091L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 cancel();
             }
         });
         addButton = new Button("Ajouter", new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 6239560400332019566L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 prepareFormToAddNewItem();
             }
         });
         saveButton = new Button("Sauvegarder", new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -8592123697785682338L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 saveItem();
             }
         });
+        multiSaveButton = new Button("Sauvegarder", new Button.ClickListener() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -6786855965708701747L;
+
+			@Override
+            public void buttonClick(Button.ClickEvent event) {
+                saveItems();
+            }
+        });
         copyButton = new Button("Dupliquer", new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 3229299398078206642L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 prepareFormToAddCopiedItem();
             }
@@ -139,7 +180,12 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
         form.addComponent(copyButton);
 
         table.addValueChangeListener(new Property.ValueChangeListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -5761392244029786585L;
+
+			@Override
             public void valueChange(Property.ValueChangeEvent event) {
                 selectedItemIds = new ArrayList<>();
                 if (table.isMultiSelect()) {
@@ -169,6 +215,7 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
 
         multiSelectForm = new FormLayout();
         createMultiSelectForm();
+        multiSelectForm.addComponent(multiSaveButton);
         multiSelectForm.setVisible(false);
 
         HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -224,7 +271,7 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
 
             binder.commit();
 
-            preSaveProcessing(item);
+            preSaveItemProcessing(item);
 
             if (table.getValue() == null) {
                 try {
@@ -246,7 +293,7 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
             entities.commit();
             table.refreshRowCache();
 
-            postSaveProcessing(item);
+            postSaveItemProcessing(item);
 
             table.setValue(null);
 
@@ -255,6 +302,24 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
             LOG.error(e.getMessage(), e);
             Notification.show("Erreur d'accès aux données", e.getMessage(), Notification.Type.ERROR_MESSAGE);
         }
+    }
+
+    protected void saveItems() {
+        getMultiFormValues();
+
+        Collection<Object> itemIds = (Collection<Object>) table.getValue();
+        for (Object itemId : itemIds) {
+            T item = entities.getItem(itemId).getEntity();
+
+            setItemValues(item);
+
+            entities.addEntity(item);
+        }
+
+        postSaveItemsProcessing();
+
+        table.setValue(null);
+        multiSelectForm.setVisible(false);
     }
 
     protected void prepareFormToAddCopiedItem() {
@@ -289,7 +354,7 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
             addButton.setData(false);
 
             T item = entityItem.getEntity();
-            binder.setItemDataSource(new BeanItem<T>(item));
+            binder.setItemDataSource(new BeanItem<>(item));
             form.setVisible(true);
 
             updateForm(item);
@@ -298,8 +363,6 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
             copyButton.setEnabled(true);
 
             focusOnFirstComponent();
-        } else {
-            updateForm(null);
         }
     }
 
@@ -310,8 +373,15 @@ public abstract class AbstractBasicModelView<T> extends VerticalLayout implement
         }
     }
 
-    protected abstract void preSaveProcessing(T item);
-    protected abstract void postSaveProcessing(T item);
+    protected abstract void preSaveItemProcessing(T item);
+
+    protected abstract void postSaveItemProcessing(T item);
+
+    protected abstract void getMultiFormValues();
+
+    protected abstract void setItemValues(T item);
+
+    protected abstract void postSaveItemsProcessing();
 
     protected void prepareFormToAddNewItem() {
         addButton.setData(true);

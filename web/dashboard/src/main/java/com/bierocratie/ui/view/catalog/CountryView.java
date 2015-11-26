@@ -5,8 +5,6 @@ import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 
 /**
@@ -18,7 +16,10 @@ import com.vaadin.navigator.ViewChangeListener;
  */
 public class CountryView extends AbstractBasicModelView<Country> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CountryView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1047107696250695717L;
 
     @Override
     protected Class<Country> getClazz() {
@@ -73,15 +74,27 @@ public class CountryView extends AbstractBasicModelView<Country> {
     }
 
     @Override
-    protected void preSaveProcessing(Country item) {
+    protected void preSaveItemProcessing(Country item) {
     }
 
     @Override
-    protected void postSaveProcessing(Country item) {
+    protected void postSaveItemProcessing(Country item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Country item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

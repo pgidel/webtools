@@ -19,7 +19,12 @@ import java.util.*;
 @Table(name = "supplierorder")
 public class SupplierOrder implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2086545470529452222L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

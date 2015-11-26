@@ -10,7 +10,6 @@
         <class>com.bierocratie.model.catalog.Supplier</class>
         <class>com.bierocratie.model.catalog.SupplierType</class>
         <class>com.bierocratie.model.catalog.Country</class>
-        <class>com.bierocratie.model.catalog.CapacityBeer</class>
         <class>com.bierocratie.model.catalog.Capacity</class>
 
         <class>com.bierocratie.model.diffusion.Medium</class>
@@ -21,8 +20,6 @@
         <class>com.bierocratie.model.order.Stock</class>
 
         <class>com.bierocratie.model.hoppyhours.Selection</class>
-
-        <class>com.bierocratie.model.catalog.Cask</class>
 
         <class>com.bierocratie.model.accounting.Income</class>
         <class>com.bierocratie.model.accounting.Invoice</class>

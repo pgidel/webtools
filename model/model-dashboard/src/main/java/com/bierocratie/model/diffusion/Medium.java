@@ -18,7 +18,12 @@ import java.io.Serializable;
 @Table(name = "medium")
 public class Medium implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6478933814353104125L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

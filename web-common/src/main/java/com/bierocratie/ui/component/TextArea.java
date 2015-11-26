@@ -9,7 +9,12 @@ package com.bierocratie.ui.component;
  */
 public class TextArea extends com.vaadin.ui.TextArea {
 
-    public TextArea(String s) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7603207453541855503L;
+
+	public TextArea(String s) {
         super(s);
         init();
     }

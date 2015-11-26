@@ -19,7 +19,12 @@ import java.util.Set;
 @Table(name = "customer")
 public class Customer extends Account implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3271735073765712214L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

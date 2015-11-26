@@ -23,7 +23,11 @@ import org.apache.shiro.authc.UsernamePasswordToken;
  */
 public abstract class AbstractLoginView extends VerticalLayout implements View, Button.ClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractLoginView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1327352315857102965L;
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractLoginView.class);
 
     protected abstract void addAuthorizedViewsToNavigator();
 
@@ -34,14 +38,24 @@ public abstract class AbstractLoginView extends VerticalLayout implements View, 
     private Button loginButton = new Button("Se connecter", this);
 
     private Button reinitPasswordButton = new Button("Réinitialiser votre mot de passe", new Button.ClickListener() {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 7921267770334948691L;
+
+		@Override
         public void buttonClick(Button.ClickEvent clickEvent) {
             UI.getCurrent().addWindow(new InitPasswordPopup());
         }
     });
 
     private Button modifyPasswordButton = new Button("Modifier votre mot de passe", new Button.ClickListener() {
-        @Override
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -5904207588273946633L;
+
+		@Override
         public void buttonClick(Button.ClickEvent clickEvent) {
             UI.getCurrent().addWindow(new ModifyPasswordPopup());
         }

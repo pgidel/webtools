@@ -25,10 +25,13 @@ public class NotificationListener implements SharedChat.ChatListener {
     private int n = 0;
     private ChatUser currentUser;
 
-    public NotificationListener(ChatUser chatUser, Tinycon tinycon, WebNotification webNotification) {
-        this.currentUser = chatUser;
+    public NotificationListener(Tinycon tinycon, WebNotification webNotification) {
         this.tinycon = tinycon;
         this.webNotification = webNotification;
+    }
+
+    public void setUser(ChatUser chatUser) {
+        this.currentUser = chatUser;
     }
 
     @Override
@@ -40,12 +43,16 @@ public class NotificationListener implements SharedChat.ChatListener {
         LOG.info("N [{}][{}]", line.getUser().getName(), line.getText());
 
         if (currentUser.equals(line.getUser())) {
-            tinycon.setBubble(0);
-            n = 0;
+            reset();
         } else {
             webNotification.show(line.getUser().getName(), line.getText());
             tinycon.setBubble(++n);
         }
+    }
+
+    public void reset() {
+        tinycon.setBubble(0);
+        n = 0;
     }
 
 }

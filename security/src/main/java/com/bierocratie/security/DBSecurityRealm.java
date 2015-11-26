@@ -22,14 +22,12 @@ import java.util.Set;
 public class DBSecurityRealm extends JdbcRealm {
 
     // FIXME @Inject & rendre la db paramétrable
-    private AccountDAO accountDAO = new AccountDAO("orderhelper");
-
-    private String persistenceUnitName;
+    private AccountDAO accountDAO = new AccountDAO();
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         if (accountDAO == null) {
-            accountDAO = new AccountDAO(persistenceUnitName);
+            accountDAO = new AccountDAO();
         }
 
         UsernamePasswordToken upToken = (UsernamePasswordToken) token;
@@ -54,7 +52,7 @@ public class DBSecurityRealm extends JdbcRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         if (accountDAO == null) {
-            accountDAO = new AccountDAO(persistenceUnitName);
+            accountDAO = new AccountDAO();
         }
 
         if (principals == null) {
@@ -75,10 +73,6 @@ public class DBSecurityRealm extends JdbcRealm {
 
     public void setAccountDAO(AccountDAO accountDAO) {
         this.accountDAO = accountDAO;
-    }
-
-    public void setPersistenceUnitName(String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
     }
 
 }

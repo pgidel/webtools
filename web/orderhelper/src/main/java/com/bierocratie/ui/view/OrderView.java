@@ -17,7 +17,6 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import org.apache.shiro.SecurityUtils;
 
-@SuppressWarnings("serial")
 public class OrderView extends AbstractBasicModelView<Order> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderView.class);
@@ -89,7 +88,7 @@ public class OrderView extends AbstractBasicModelView<Order> {
 
     @Override
     protected BeanItem<Order> createNewBeanItem() {
-        return new BeanItem<Order>(new Order());
+        return new BeanItem<>(new Order());
     }
 
     @Override
@@ -105,7 +104,23 @@ public class OrderView extends AbstractBasicModelView<Order> {
     }
 
     @Override
-    protected void postSaveProcessing(Order item) {
+    protected void preSaveItemProcessing(Order item) {
+    }
+
+    @Override
+    protected void postSaveItemProcessing(Order item) {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Order item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

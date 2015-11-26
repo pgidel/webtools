@@ -17,7 +17,6 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.Date;
@@ -31,13 +30,18 @@ import java.util.Date;
  */
 public class DashboardView extends VerticalLayout implements View {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DashboardView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3998178886467685714L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(DashboardView.class);
 
     // TODO
     //@Inject
-    private IncomeDAO incomeDAO = new IncomeDAO("dashboard");
+    private IncomeDAO incomeDAO = new IncomeDAO();
     //@Inject
-    private InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
 
     private JPAContainer<MediumMessage> upcomingDiffusion;
     private Table upcomingDiffusionTable;
@@ -52,7 +56,7 @@ public class DashboardView extends VerticalLayout implements View {
     private Table orderInPreparationTable;*/
 
     // FIXME @Inject
-    //private MessageDAO messageDAO = new MessageDAO("dashboard");
+    //private MessageDAO messageDAO = new MessageDAO();
 
     public DashboardView() {
         DashboardMenuBar dashboardMenuBar = new DashboardMenuBar();
@@ -143,7 +147,7 @@ public class DashboardView extends VerticalLayout implements View {
         // TODO
         TextField deltaStockField = new TextField("Variation stock");
         deltaStockField.setConverter(BigInteger.class);
-        deltaStockField.setValue(accountingStatsBean.getDeltaStock().multiply(new BigDecimal(1.2)).toBigInteger().toString());
+        deltaStockField.setValue(accountingStatsBean.getDeltaStockTTC().toBigInteger().toString());
         deltaStockField.setReadOnly(true);
         content.addComponent(deltaStockField);
 
@@ -177,7 +181,7 @@ public class DashboardView extends VerticalLayout implements View {
 
         TextField deltaStockField = new TextField("Variation stock");
         deltaStockField.setConverter(BigInteger.class);
-        deltaStockField.setValue(accountingStatsBean.getDeltaStock().toBigInteger().toString());
+        deltaStockField.setValue(accountingStatsBean.getDeltaStockHT().toBigInteger().toString());
         deltaStockField.setReadOnly(true);
         content.addComponent(deltaStockField);
 

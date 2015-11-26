@@ -7,12 +7,11 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>webtools</artifactId>
-        <version>1.0</version>
+        <version>${webtools.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>database</artifactId>
-    <version>1.0</version>
+    <version>${database.version}</version>
     <packaging>pom</packaging>
     <modules>
         <module>database-orderhelper</module>
@@ -20,7 +19,11 @@
     </modules>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.bierocratie</groupId>
+            <artifactId>database-common</artifactId>
+            <version>${database-common.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -18,7 +18,12 @@ import java.io.Serializable;
 @Table(name = "suppliertype")
 public class SupplierType implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -769844805970423984L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

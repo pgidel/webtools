@@ -16,7 +16,12 @@ import java.util.Date;
 @Table(name = "mediummessage")
 public class MediumMessage implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1646091146512844448L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

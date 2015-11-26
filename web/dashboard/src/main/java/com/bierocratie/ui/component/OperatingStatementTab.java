@@ -3,7 +3,6 @@ package com.bierocratie.ui.component;
 import com.bierocratie.bean.AccountingStatsBean;
 import com.bierocratie.db.accounting.IncomeDAO;
 import com.bierocratie.db.accounting.InvoiceDAO;
-import com.bierocratie.db.accounting.StockValueDAO;
 import com.bierocratie.model.accounting.BudgetYear;
 import com.bierocratie.model.accounting.Category;
 import com.bierocratie.model.accounting.CategoryAndMonth;
@@ -13,9 +12,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +26,15 @@ import java.util.Map;
  */
 public class OperatingStatementTab extends VerticalLayout {
 
-    // TODO
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5182920475322986382L;
+	// TODO
     //@Inject
-    private InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
     //@Inject
-    private IncomeDAO incomeDAO = new IncomeDAO("dashboard");
+    private IncomeDAO incomeDAO = new IncomeDAO();
 
     private JPAContainer<Category> categories;
 
@@ -58,9 +59,9 @@ public class OperatingStatementTab extends VerticalLayout {
         Item stockByMonthItem = table.addItem("stockByMonth");
         stockByMonthItem.getItemProperty("category").setValue("--- Delta stocks ---");
         if (budgetYear.isCurrentYear() && !BudgetYear.getCurrentMonth().equals(budgetYear.getLastMonth())) {
-            createCurrentAmountsColumn(accountingStatsBean.getDeltaStock().toBigInteger());
+            createCurrentAmountsColumn(accountingStatsBean.getDeltaStockHT().toBigInteger());
         }
-        createTotalColumn(accountingStatsBean.getDeltaStock().toBigInteger());
+        createTotalColumn(accountingStatsBean.getDeltaStockHT().toBigInteger());
 
         table.setFooterVisible(true);
         table.setPageLength(0);

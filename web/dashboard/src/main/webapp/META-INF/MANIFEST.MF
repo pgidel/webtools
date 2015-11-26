@@ -1,15 +1,29 @@
 Manifest-Version: 1.0
 Class-Path: model-dashboard.jar model-common.jar validation-api-1.1.0.
- Final.jar eclipselink-2.6.0.jar javax.persistence-2.1.0.jar commonj.s
- do-2.1.1.jar javax.json-1.0.4.jar database-dashboard.jar web-common.j
- ar security.jar database-common.jar shiro-core-1.2.3.jar slf4j-api-1.
- 6.4.jar commons-beanutils-1.8.3.jar shiro-web-1.2.3.jar javax.mail-ap
- i-1.5.3.jar activation-1.1.jar sqlite-jdbc-3.8.10.2.jar jpacontainer-
- 3.2.0.jar vaadin-server-7.5.4.jar vaadin-sass-compiler-0.9.12.jar sac
- -1.3.jar flute-1.3.0.gg2.jar vaadin-shared-7.5.4.jar streamhtmlparser
- -jsilver-0.0.10.vaadin1.jar guava-16.0.1.vaadin1.jar jsoup-1.8.1.jar 
- tableexport-for-vaadin-1.5.1.5.jar vaadin-themes-7.5.4.jar commons-io
- -2.2.jar poi-3.10-FINAL.jar commons-codec-1.5.jar vaadin-client-compi
- led-7.5.4.jar vaadin-push-7.5.4.jar atmosphere-runtime-2.2.7.vaadin1.
- jar vaadin-slf4j-jdk14-1.6.1.jar tinycon-7.0.0.jar
+ Final.jar eclipselink-2.6.1.jar javax.persistence-2.1.0.jar commonj.s
+ do-2.1.1.jar javax.json-1.0.4.jar database-dashboard.jar database-com
+ mon.jar web-common.jar security.jar shiro-core-1.2.3.jar slf4j-api-1.
+ 6.4.jar commons-beanutils-1.9.0.jar shiro-web-1.2.3.jar javax.mail-ap
+ i-1.5.3.jar activation-1.1.jar sqlite-jdbc-3.8.11.2.jar jpacontainer-
+ 3.2.0.jar vaadin-server-7.5.9.jar vaadin-sass-compiler-0.9.12.jar sac
+ -1.3.jar flute-1.3.0.gg2.jar commons-logging-1.1.1.jar vaadin-shared-
+ 7.5.9.jar streamhtmlparser-jsilver-0.0.10.vaadin1.jar guava-16.0.1.va
+ adin1.jar jsoup-1.8.1.jar tableexport-for-vaadin-1.5.1.5.jar vaadin-t
+ hemes-7.5.9.jar commons-io-2.2.jar poi-3.10-FINAL.jar commons-codec-1
+ .5.jar jasperreports-6.1.1.jar commons-collections-3.2.1.jar commons-
+ digester-2.1.jar itext-2.1.7.js3.jar bcmail-jdk14-138.jar bcprov-jdk1
+ 4-138.jar bctsp-jdk14-1.38.jar bcprov-jdk14-1.38.jar bcmail-jdk14-1.3
+ 8.jar jcommon-1.0.23.jar jfreechart-1.0.19.jar xml-apis-1.3.02.jar ec
+ j-4.3.1.jar castor-xml-1.3.3.jar castor-core-1.3.3.jar commons-lang-2
+ .6.jar javax.inject-1.jar stax-1.2.0.jar stax-api-1.0.1.jar stax-api-
+ 1.0-2.jar spring-context-3.0.6.RELEASE.jar spring-aop-3.0.6.RELEASE.j
+ ar aopalliance-1.0.jar spring-asm-3.0.6.RELEASE.jar spring-beans-3.0.
+ 6.RELEASE.jar spring-core-3.0.6.RELEASE.jar spring-expression-3.0.6.R
+ ELEASE.jar jackson-core-2.1.4.jar jackson-databind-2.1.4.jar jackson-
+ annotations-2.1.4.jar lucene-core-4.5.1.jar lucene-analyzers-common-4
+ .5.1.jar lucene-queryparser-4.5.1.jar lucene-queries-4.5.1.jar lucene
+ -sandbox-4.5.1.jar jakarta-regexp-1.4.jar olap4j-0.9.7.309-JS-3.jar c
+ ore-2.3.0.jar chatbox-0.7.4.jar webnotifications-1.0.0.jar vaadin-cli
+ ent-compiled-7.5.9.jar vaadin-push-7.5.9.jar atmosphere-runtime-2.2.7
+ .vaadin1.jar vaadin-slf4j-jdk14-1.6.1.jar tinycon-7.0.0.jar
 

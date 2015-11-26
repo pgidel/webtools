@@ -1,5 +1,6 @@
 package com.bierocratie.ui.component.security;
 
+import com.bierocratie.db.persistence.PersistenceManager;
 import com.bierocratie.db.security.AccountDAO;
 import com.bierocratie.email.EmailSender;
 import com.bierocratie.model.security.Account;
@@ -13,7 +14,6 @@ import javax.mail.MessagingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
@@ -27,7 +27,14 @@ import java.sql.SQLException;
  */
 public class ModifyPasswordPopup extends Window implements Button.ClickListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ModifyPasswordPopup.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8626828010142708237L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(ModifyPasswordPopup.class);
+
+    private static final EntityManagerFactory entityManagerFactory = PersistenceManager.getInstance().getEntityManagerFactory();
 
     private TextField loginVerificationField = new TextField("Saisissez votre login");
     private PasswordField oldPasswordField = new PasswordField("Saisissez votre ancien mot de passe");
@@ -37,7 +44,7 @@ public class ModifyPasswordPopup extends Window implements Button.ClickListener 
 
     // FIXME
     //@Inject
-    private AccountDAO accountDAO = new AccountDAO("orderhelper");
+    private AccountDAO accountDAO = new AccountDAO();
 
     public ModifyPasswordPopup() {
         super("Modification de mot de passe");
@@ -72,7 +79,6 @@ public class ModifyPasswordPopup extends Window implements Button.ClickListener 
         String newPassword = newPasswordField.getValue();
 
         // TODO Séparer la partie DB & Security
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(accountDAO.getPersistenceUnitName());
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();

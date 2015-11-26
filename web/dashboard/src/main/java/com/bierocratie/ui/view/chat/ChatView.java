@@ -3,6 +3,7 @@ package com.bierocratie.ui.view.chat;
 import com.bierocratie.ui.NavigatorUI;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.event.LayoutEvents;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
@@ -24,7 +25,12 @@ import org.vaadin.chatbox.client.ChatUser;
  */
 public class ChatView extends VerticalLayout implements View {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ChatView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8848200667100726201L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(ChatView.class);
 
     private static SharedChat chat = new SharedChat();
 
@@ -34,6 +40,8 @@ public class ChatView extends VerticalLayout implements View {
         chat.addListener(new SentNotifier(chat));
     }
 
+    private NotificationListener notificationListener;
+
     public ChatView() {
         DashboardMenuBar dashboardMenuBar = new DashboardMenuBar();
         addComponent(dashboardMenuBar);
@@ -42,6 +50,7 @@ public class ChatView extends VerticalLayout implements View {
         chatbox.setShowSendButton(false);
 
         String ipAddress = Page.getCurrent().getWebBrowser().getAddress();
+        LOG.info("Adresse IP [{}]", ipAddress);
         switch (ipAddress) {
             case "192.168.0.22":
                 connectUser("brct");
@@ -57,8 +66,36 @@ public class ChatView extends VerticalLayout implements View {
                 addLoginForm();
         }
 
+        NavigatorUI ui = (NavigatorUI) (UI.getCurrent());
+        notificationListener = new NotificationListener(ui.getTinycon(), ui.getWebNotification());
+
         chatbox.setWidth("100%");
+        chatbox.setHeight((Page.getCurrent().getBrowserWindowHeight() - 65) + "px");
         addComponent(chatbox);
+
+        Page.getCurrent().addBrowserWindowResizeListener(new Page.BrowserWindowResizeListener() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 152177220701154997L;
+
+			@Override
+            public void browserWindowResized(Page.BrowserWindowResizeEvent browserWindowResizeEvent) {
+                chatbox.setHeight((Page.getCurrent().getBrowserWindowHeight() - 65) + "px");
+            }
+        });
+
+        addLayoutClickListener(new LayoutEvents.LayoutClickListener() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -4934482623275764294L;
+
+			@Override
+            public void layoutClick(LayoutEvents.LayoutClickEvent layoutClickEvent) {
+                notificationListener.reset();
+            }
+        });
     }
 
     private void addLoginForm() {
@@ -66,14 +103,24 @@ public class ChatView extends VerticalLayout implements View {
         TextField tf = new TextField("Pseudo :");
         Button b = new Button("Se connecter");
         tf.addFocusListener(new FieldEvents.FocusListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = 2983818512631373504L;
+
+			@Override
             public void focus(FieldEvents.FocusEvent focusEvent) {
                 b.setClickShortcut(ShortcutAction.KeyCode.ENTER);
             }
         });
         tf.focus();
         b.addClickListener(new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -1620906044394376780L;
+
+			@Override
             public void buttonClick(Button.ClickEvent event) {
                 connectUser(tf.getValue());
                 b.removeClickShortcut();
@@ -87,11 +134,11 @@ public class ChatView extends VerticalLayout implements View {
     private void connectUser(String nickname) {
         ChatUser user = ChatUser.newUser(nickname);
         chatbox.setUser(user);
-        chat.addLine(new ChatLine(user.getName()+" a rejoint le chat."));
+        chat.addLine(new ChatLine(user.getName() + " a rejoint le chat."));
         chatbox.focusToInputField();
 
-        NavigatorUI ui = (NavigatorUI)(UI.getCurrent());
-        chat.addListener(new NotificationListener(user, ui.getTinycon(), ui.getWebNotification()));
+        notificationListener.setUser(user);
+        chat.addListener(notificationListener);
     }
 
     @Override

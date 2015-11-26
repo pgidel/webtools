@@ -1,5 +1,6 @@
 package com.bierocratie.ui.view.catalog;
 
+import com.bierocratie.model.accounting.Tva;
 import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.catalog.Country;
 import com.bierocratie.model.catalog.Supplier;
@@ -15,8 +16,6 @@ import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
 import com.vaadin.data.util.filter.Or;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
@@ -33,7 +32,10 @@ import com.vaadin.ui.Table;
  */
 public class SupplierView extends AbstractBasicModelView<Supplier> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SupplierView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4242493933211937279L;
 
     @Override
     protected Class<Supplier> getClazz() {
@@ -51,6 +53,8 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
         return new DashboardMenuBar();
     }
 
+    private ComboBox tvaComboBox;
+
     private JPAContainer<Beer> beers;
 
     private Button addBeerButton;
@@ -59,6 +63,7 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
     protected void buildAndBind() {
         form.addComponent(binder.buildAndBind("Nom", "name"));
         form.addComponent(binder.buildAndBind("Code", "code"));
+        form.addComponent(binder.buildAndBind("Origine", "region"));
         form.addComponent(binder.buildAndBind("Adresse", "address"));
         form.addComponent(binder.buildAndBind("Email", "email"));
         form.addComponent(binder.buildAndBind("Téléphone", "telephone"));
@@ -89,17 +94,30 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
         binder.bind(countryComboBox, "country");
         form.addComponent(countryComboBox);
 
+        // FIXME pb accès persistenceUnitName
+        //final JPAContainer<Supplier> suppliers = JPAContainerFactory.make(Supplier.class, persistenceUnitName);
+        final JPAContainer<Tva> tvas = JPAContainerFactory.make(Tva.class, "dashboard");
+        tvaComboBox = new ComboBox("TVA");
+        tvaComboBox.setContainerDataSource(tvas);
+        tvaComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
+        tvaComboBox.setItemCaptionPropertyId("rate2String");
+        tvaComboBox.setConverter(new SingleSelectConverter<Tva>(tvaComboBox));
+        tvaComboBox.setTextInputAllowed(false);
+        tvaComboBox.setImmediate(true);
+        tvaComboBox.setRequired(true);
+        binder.bind(tvaComboBox, "tva");
+        form.addComponent(tvaComboBox);
+
         TextArea textArea = new TextArea("Dégustation");
         binder.bind(textArea, "tastingNotes");
         form.addComponent(textArea);
 
         beers = JPAContainerFactory.make(Beer.class, "dashboard");
         Table beerTable = new Table("Bières", beers);
-        // TODO Ajouter une colonne pour chaque format
-        beerTable.setVisibleColumns(new String[]{"name", "brewery", "supplier"});
+        beerTable.setVisibleColumns(new String[]{"name", "brewery", "capacity"});
         beerTable.setColumnHeader("name", "Nom");
         beerTable.setColumnHeader("brewery", "Brasserie");
-        beerTable.setColumnHeader("supplier", "Fournisseur");
+        beerTable.setColumnHeader("capacity", "Volume");
         beerTable.setEnabled(false);
         beerTable.setPageLength(0);
         binder.bind(beerTable, "beers");
@@ -107,7 +125,12 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
 
         addBeerButton = new Button("Nouvelle bière");
         addBeerButton.addClickListener(new Button.ClickListener() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -8821079786346958197L;
+
+			@Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 getUI().getNavigator().navigateTo(NavigatorUI.BEER_VIEW + "/" + addBeerButton.getData());
             }
@@ -139,8 +162,15 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
 
     @Override
     protected BeanItem<Supplier> createNewBeanItem() {
-        Supplier newItem = new Supplier();
+        final JPAContainer<Tva> tvas = JPAContainerFactory.make(Tva.class, "dashboard");
+        tvas.addContainerFilter(new Compare.Equal("rate", 0.2));
+        Tva tva = tvas.getItem(tvas.firstItemId()).getEntity();
+
+        Supplier newItem = new Supplier(tva);
+
+        tvas.removeAllContainerFilters();
         refreshContainerFilters(newItem);
+
         return new BeanItem<>(newItem);
     }
 
@@ -149,6 +179,7 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
         Supplier copy = new Supplier();
         copy.setName(item.getName());
         copy.setCode(item.getCode());
+        copy.setRegion(item.getRegion());
         copy.setAddress(item.getAddress());
         copy.setCountry(item.getCountry());
         copy.setTelephone(item.getTelephone());
@@ -159,9 +190,10 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
 
     @Override
     protected void setTableColumns() {
-        table.setVisibleColumns(new String[]{"name", "code", "address", "email", "telephone", "type", "country"});
+        table.setVisibleColumns(new String[]{"name", "code", "region", "address", "email", "telephone", "type", "country"});
         table.setColumnHeader("name", "Nom");
         table.setColumnHeader("code", "Code");
+        table.setColumnHeader("region", "Origine");
         table.setColumnHeader("address", "Adresse");
         table.setColumnHeader("email", "Email");
         table.setColumnHeader("telephone", "Téléphone");
@@ -174,15 +206,27 @@ public class SupplierView extends AbstractBasicModelView<Supplier> {
     }
 
     @Override
-    protected void preSaveProcessing(Supplier item) {
+    protected void preSaveItemProcessing(Supplier item) {
     }
 
     @Override
-    protected void postSaveProcessing(Supplier item) {
+    protected void postSaveItemProcessing(Supplier item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Supplier item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

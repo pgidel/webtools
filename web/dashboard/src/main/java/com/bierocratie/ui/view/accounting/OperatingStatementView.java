@@ -2,7 +2,6 @@ package com.bierocratie.ui.view.accounting;
 
 import com.bierocratie.db.accounting.IncomeDAO;
 import com.bierocratie.db.accounting.InvoiceDAO;
-import com.bierocratie.db.accounting.StockValueDAO;
 import com.bierocratie.model.accounting.BudgetYear;
 import com.bierocratie.model.accounting.Category;
 import com.bierocratie.ui.component.DashboardMenuBar;
@@ -32,72 +31,92 @@ import java.util.Map;
  */
 public class OperatingStatementView extends VerticalLayout implements View {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OperatingStatementView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2959442167205797293L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(OperatingStatementView.class);
 
     // TODO
     //@Inject
-    private InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
     //@Inject
-    private IncomeDAO incomeDAO = new IncomeDAO("dashboard");
-    //@Inject
-    private StockValueDAO stockValueDAO = new StockValueDAO("dashboard");
+    private IncomeDAO incomeDAO = new IncomeDAO();
 
-    private JPAContainer<BudgetYear> budgetYears = JPAContainerFactory.make(BudgetYear.class, invoiceDAO.getPersistenceUnitName());
-    private JPAContainer<Category> categories = JPAContainerFactory.make(Category.class, invoiceDAO.getPersistenceUnitName());
+    private JPAContainer<BudgetYear> budgetYears = JPAContainerFactory.make(BudgetYear.class, "dashboard");
+    private JPAContainer<Category> categories = JPAContainerFactory.make(Category.class, "dashboard");
 
     private Map<String, BigInteger> incomesByMonth;
-    private BigInteger incomesSum;
     private Map<String, BigInteger> outcomesByMonth;
-    private BigInteger outcomesSum;
-    private Map<Category, BigInteger> sumByCategory;
+
+    private TabSheet tabs = new TabSheet();
 
     public OperatingStatementView() {
         DashboardMenuBar dashboardMenuBar = new DashboardMenuBar();
         addComponent(dashboardMenuBar);
-    }
 
-    @Override
-    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         try {
-            TabSheet tabs = new TabSheet();
             budgetYears.sort(new Object[]{"year"}, new boolean[]{true});
 
             incomesByMonth = incomeDAO.getSumIncomesHTByMonth();
             outcomesByMonth = invoiceDAO.getSumInvoiceByMonthForOperating();
 
             for (Object id : budgetYears.getItemIds()) {
-                incomesSum = BigInteger.ZERO;
-                outcomesSum = BigInteger.ZERO;
-
                 BudgetYear budgetYear = budgetYears.getItem(id).getEntity();
+                if (!budgetYear.isCurrentYear()) {
+                    OperatingStatementTab tab = new OperatingStatementTab(budgetYear, categories, incomesByMonth, outcomesByMonth);
+                    tabs.addTab(tab, budgetYear.getYear());
+                }
+            }
 
-                OperatingStatementTab tab = new OperatingStatementTab(budgetYear, categories, incomesByMonth, outcomesByMonth);
-                tabs.addTab(tab, budgetYear.getYear());
+            addComponent(tabs);
+        } catch (SQLException e) {
+            Notification.show("Erreur d'accès aux données", e.getMessage(), Notification.Type.ERROR_MESSAGE);
+            LOG.error(e.getMessage(), e);
+        }
+
+        Button excelExportButton = new Button("Exporter sous Excel");
+        excelExportButton.addClickListener(new Button.ClickListener() {
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -6127046192551675773L;
+
+			public void buttonClick(final Button.ClickEvent event) {
+                OperatingStatementTab tab = (OperatingStatementTab) tabs.getTab(0).getComponent();
+                ExcelExport excelExport = new ExcelExport(tab.getTable(), tab.getBudgetYear().getYear());
+                String title = "Biérocratie - " + DashboardMenuBar.OPERATING_STATEMENT_TITLE;
+                excelExport.setReportTitle(title);
+                // FIXME Pouvoir changer le nom
+                // excelExport.setExportFileName(title);
+                excelExport.export();
+                for (int i = 1; i < tabs.getComponentCount(); i++) {
+                    tab = (OperatingStatementTab) tabs.getTab(i).getComponent();
+                    excelExport.setNextTable(tab.getTable(), tab.getBudgetYear().getYear());
+                    excelExport.export();
+                }
+                excelExport.sendConverted();
+            }
+        });
+        addComponent(excelExportButton);
+    }
+
+    @Override
+    public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+        try {
+            incomesByMonth = incomeDAO.getSumIncomesHTByMonth();
+            outcomesByMonth = invoiceDAO.getSumInvoiceByMonthForOperating();
+
+            for (Object id : budgetYears.getItemIds()) {
+                BudgetYear budgetYear = budgetYears.getItem(id).getEntity();
                 if (budgetYear.isCurrentYear()) {
+                    OperatingStatementTab tab = new OperatingStatementTab(budgetYear, categories, incomesByMonth, outcomesByMonth);
+                    tabs.addTab(tab, budgetYear.getYear());
                     tabs.setSelectedTab(tab);
                 }
             }
             addComponent(tabs);
-
-            Button excelExportButton = new Button("Exporter sous Excel");
-            excelExportButton.addClickListener(new Button.ClickListener() {
-                public void buttonClick(final Button.ClickEvent event) {
-                    OperatingStatementTab tab = (OperatingStatementTab) tabs.getTab(0).getComponent();
-                    ExcelExport excelExport = new ExcelExport(tab.getTable(), tab.getBudgetYear().getYear());
-                    String title = "Biérocratie - " + DashboardMenuBar.OPERATING_STATEMENT_TITLE;
-                    excelExport.setReportTitle(title);
-                    // FIXME Pouvoir changer le nom
-                    // excelExport.setExportFileName(title);
-                    excelExport.export();
-                    for (int i = 1; i < tabs.getComponentCount(); i++) {
-                        tab = (OperatingStatementTab) tabs.getTab(i).getComponent();
-                        excelExport.setNextTable(tab.getTable(), tab.getBudgetYear().getYear());
-                        excelExport.export();
-                    }
-                    excelExport.sendConverted();
-                }
-            });
-            addComponent(excelExportButton);
         } catch (SQLException e) {
             Notification.show("Erreur d'accès aux données", e.getMessage(), Notification.Type.ERROR_MESSAGE);
             LOG.error(e.getMessage(), e);

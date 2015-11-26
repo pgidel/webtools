@@ -12,22 +12,15 @@ import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.MultiSelectMode;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Field;
 
-import java.util.Collection;
-
 @SuppressWarnings("serial")
 public class InvoiceView extends AbstractBasicModelView<Invoice> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(InvoiceView.class);
 
     private Category category;
 
@@ -42,9 +35,12 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
 
     private BudgetYear currentBudgetYear;
 
-    public InvoiceView(Category category, BudgetYear currentBudgetYear) {
+    private InvoiceByCategoryView invoiceByCategoryView;
+
+    public InvoiceView(Category category, BudgetYear currentBudgetYear, InvoiceByCategoryView invoiceByCategoryView) {
         this.category = category;
         this.currentBudgetYear = currentBudgetYear;
+        this.invoiceByCategoryView = invoiceByCategoryView;
 
         table.sort(new Object[]{"date", "month"}, new boolean[]{false, false});
         table.setMultiSelect(true);
@@ -109,15 +105,17 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
         tvaComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         tvaComboBox.setItemCaptionPropertyId("rate2String");
         tvaComboBox.setConverter(new SingleSelectConverter<Tva>(tvaComboBox));
-        tvaComboBox.setFilteringMode(FilteringMode.CONTAINS);
+        tvaComboBox.setTextInputAllowed(false);
         tvaComboBox.setImmediate(true);
         binder.bind(tvaComboBox, "tva");
         form.addComponent(tvaComboBox);
     }
 
+    private JPAContainer<Category> categories;
+
     @Override
     protected void createMultiSelectForm() {
-        final JPAContainer<Category> categories = JPAContainerFactory.make(Category.class, "dashboard");
+        categories = JPAContainerFactory.make(Category.class, "dashboard");
         categoryForMultiInvoicesComboBox = new ComboBox("Catégorie");
         categoryForMultiInvoicesComboBox.setContainerDataSource(categories);
         categoryForMultiInvoicesComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
@@ -125,35 +123,35 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
         categoryForMultiInvoicesComboBox.setConverter(new SingleSelectConverter<Category>(categoryForMultiInvoicesComboBox));
         categoryForMultiInvoicesComboBox.setFilteringMode(FilteringMode.CONTAINS);
         multiSelectForm.addComponent(categoryForMultiInvoicesComboBox);
-
-        Button changeCategoryButton = new Button("Changer la catégorie", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent clickEvent) {
-                changeCategory(categories);
-            }
-        });
-
-        multiSelectForm.addComponent(changeCategoryButton);
     }
 
-    private void changeCategory(JPAContainer<Category> categories) {
+    private Category newCategory;
+
+    @Override
+    protected void getMultiFormValues() {
         if (categoryForMultiInvoicesComboBox.getValue() != null) {
-            long cateogryId = (long) categoryForMultiInvoicesComboBox.getValue();
-            Category newCategory = categories.getItem(cateogryId).getEntity();
-
-            Collection<Object> itemIds = (Collection<Object>) table.getValue();
-            for (Object itemId : itemIds) {
-                Invoice invoice = entities.getItem(itemId).getEntity();
-                invoice.setCategory(newCategory);
-				if (invoice.getTva() == null) {
-					invoice.setTva(newCategory.getDefaultTva());
-				}
-                entities.addEntity(invoice);
-            }
-
-            table.setValue(null);
-            multiSelectForm.setVisible(false);
+            long categoryId = (long) categoryForMultiInvoicesComboBox.getValue();
+            newCategory = categories.getItem(categoryId).getEntity();
         }
+    }
+
+    @Override
+    protected void setItemValues(Invoice item) {
+        if (newCategory != null) {
+            item.setCategory(newCategory);
+            if (item.getTva() == null) {
+                item.setTva(newCategory.getDefaultTva());
+            }
+        }
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
+        if (newCategory != null) {
+            // FIXME
+            invoiceByCategoryView.getInvoiceViewByCategoryMap().get(newCategory.getName()).getEntities().refresh();
+        }
+        newCategory = null;
     }
 
     @Override
@@ -178,13 +176,11 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
 
     @Override
     protected void updateForm(Invoice item) {
-        if (item != null) {
-            dateField.setEnabled(!item.isImported());
-            monthField.setEnabled(!item.isImported());
-            supplierField.setEnabled(!item.isImported());
-            amountField.setEnabled(!item.isImported());
-            copyButton.setVisible(!item.isImported());
-        }
+        dateField.setEnabled(!item.isImported());
+        monthField.setEnabled(!item.isImported());
+        supplierField.setEnabled(!item.isImported());
+        amountField.setEnabled(!item.isImported());
+        copyButton.setVisible(!item.isImported());
     }
 
     @Override
@@ -204,7 +200,7 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
         invoice.setCategory(category);
         invoice.setTva(category.getDefaultTva());
 
-        return new BeanItem<Invoice>(invoice);
+        return new BeanItem<>(invoice);
     }
 
     @Override
@@ -223,11 +219,11 @@ public class InvoiceView extends AbstractBasicModelView<Invoice> {
     }
 
     @Override
-    protected void preSaveProcessing(Invoice item) {
+    protected void preSaveItemProcessing(Invoice item) {
     }
 
     @Override
-    protected void postSaveProcessing(Invoice item) {
+    protected void postSaveItemProcessing(Invoice item) {
     }
 
     @Override

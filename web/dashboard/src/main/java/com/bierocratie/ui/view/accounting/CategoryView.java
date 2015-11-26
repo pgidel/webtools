@@ -10,19 +10,18 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
 
-@SuppressWarnings("serial")
 public class CategoryView extends AbstractBasicModelView<Category> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CategoryView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1005243066270817798L;
 
-    @Override
+	@Override
     protected Class<Category> getClazz() {
         return Category.class;
     }
@@ -51,7 +50,7 @@ public class CategoryView extends AbstractBasicModelView<Category> {
         tvaComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         tvaComboBox.setItemCaptionPropertyId("rate2String");
         tvaComboBox.setConverter(new SingleSelectConverter<Tva>(tvaComboBox));
-        tvaComboBox.setFilteringMode(FilteringMode.CONTAINS);
+        tvaComboBox.setTextInputAllowed(false);
         tvaComboBox.setImmediate(true);
         binder.bind(tvaComboBox, "defaultTva");
         form.addComponent(tvaComboBox);
@@ -104,15 +103,27 @@ public class CategoryView extends AbstractBasicModelView<Category> {
     }
 
     @Override
-    protected void preSaveProcessing(Category item) {
+    protected void preSaveItemProcessing(Category item) {
     }
 
     @Override
-    protected void postSaveProcessing(Category item) {
+    protected void postSaveItemProcessing(Category item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Category item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

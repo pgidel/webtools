@@ -7,13 +7,12 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>webtools</artifactId>
-        <version>1.0</version>
+        <version>${webtools.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>web</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>${web.version}</version>
     <modules>
         <!--module>orderhelper</module-->
         <module>dashboard</module>
@@ -23,7 +22,7 @@
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>web-common</artifactId>
-            <version>1.0</version>
+            <version>${web-common.version}</version>
         </dependency>
     </dependencies>
 

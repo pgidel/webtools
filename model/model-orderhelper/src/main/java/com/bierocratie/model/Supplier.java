@@ -22,7 +22,12 @@ import java.util.Set;
 @Table(name = "supplier")
 public class Supplier implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6438266853253285501L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

@@ -1,19 +1,14 @@
 package com.bierocratie.ui.view.diffusion;
 
-import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.diffusion.Medium;
 import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 
 @SuppressWarnings("serial")
 public class MediumView extends AbstractBasicModelView<Medium> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MediumView.class);
 
     @Override
     protected Class<Medium> getClazz() {
@@ -68,15 +63,27 @@ public class MediumView extends AbstractBasicModelView<Medium> {
     }
 
     @Override
-    protected void preSaveProcessing(Medium item) {
+    protected void preSaveItemProcessing(Medium item) {
     }
 
     @Override
-    protected void postSaveProcessing(Medium item) {
+    protected void postSaveItemProcessing(Medium item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Medium item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

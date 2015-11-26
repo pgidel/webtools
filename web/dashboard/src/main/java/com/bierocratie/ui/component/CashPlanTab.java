@@ -24,11 +24,15 @@ import java.util.Map;
  */
 public class CashPlanTab extends VerticalLayout {
 
-    // TODO
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1662482594147865263L;
+	// TODO
     //@Inject
-    private InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+    private InvoiceDAO invoiceDAO = new InvoiceDAO();
     //@Inject
-    private IncomeDAO incomeDAO = new IncomeDAO("dashboard");
+    private IncomeDAO incomeDAO = new IncomeDAO();
 
     private JPAContainer<Category> categories;
 
@@ -76,11 +80,11 @@ public class CashPlanTab extends VerticalLayout {
         for (CategoryAndMonth amount : currentAmounts) {
             Item categoryItem = table.getItem(amount.getCategory());
             BigInteger sum = amount.getAmount();
-            BigInteger noMonth = (BigInteger)categoryItem.getItemProperty(Invoice.DEFAULT_MONTH).getValue();
+            BigInteger noMonth = (BigInteger) categoryItem.getItemProperty(Invoice.DEFAULT_MONTH).getValue();
             if (sum == null) {
                 sum = BigInteger.ZERO;
             }
-            if (noMonth == null ) {
+            if (noMonth == null) {
                 noMonth = BigInteger.ZERO;
             }
             sum = sum.add(noMonth);
@@ -110,11 +114,11 @@ public class CashPlanTab extends VerticalLayout {
         for (CategoryAndMonth amount : amounts) {
             Item categoryItem = table.getItem(amount.getCategory());
             BigInteger sum = amount.getAmount();
-            BigInteger noMonth = (BigInteger)categoryItem.getItemProperty(Invoice.DEFAULT_MONTH).getValue();
+            BigInteger noMonth = (BigInteger) categoryItem.getItemProperty(Invoice.DEFAULT_MONTH).getValue();
             if (sum == null) {
                 sum = BigInteger.ZERO;
             }
-            if (noMonth == null ) {
+            if (noMonth == null) {
                 noMonth = BigInteger.ZERO;
             }
             sum = sum.add(noMonth);

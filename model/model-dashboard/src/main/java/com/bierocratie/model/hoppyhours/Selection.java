@@ -18,7 +18,12 @@ import java.util.Date;
 @Table(name = "hoppyhours")
 public class Selection implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1339179194834952847L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

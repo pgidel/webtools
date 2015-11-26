@@ -7,25 +7,24 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>web</artifactId>
-        <version>1.0</version>
+        <version>${web.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>orderhelper</artifactId>
     <packaging>war</packaging>
-    <version>1.0</version>
+    <version>${orderhelper.version}</version>
     <name>Plateforme de commandes</name>
 
     <dependencies>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>model-orderhelper</artifactId>
-            <version>1.0</version>
+            <version>${model-orderhelper.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>database-orderhelper</artifactId>
-            <version>1.0</version>
+            <version>${databse-orderhelper.version}</version>
         </dependency>
 
         <dependency>

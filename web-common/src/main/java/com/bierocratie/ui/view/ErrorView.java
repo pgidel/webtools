@@ -14,7 +14,12 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class ErrorView extends VerticalLayout implements View {
 
-    public ErrorView() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3092686219277653351L;
+
+	public ErrorView() {
         addComponent(new Label("Oops. The view you tried to navigate to doesn't exist."));
     }
 

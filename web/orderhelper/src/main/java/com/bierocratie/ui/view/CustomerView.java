@@ -19,7 +19,6 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
-@SuppressWarnings("serial")
 public class CustomerView extends AbstractBasicModelView<Customer> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CustomerView.class);
@@ -89,7 +88,11 @@ public class CustomerView extends AbstractBasicModelView<Customer> {
     }
 
     @Override
-    protected void postSaveProcessing(Customer item) {
+    protected void preSaveItemProcessing(Customer item) {
+    }
+
+    @Override
+    protected void postSaveItemProcessing(Customer item) {
         if ((boolean) addButton.getData()) {
             try {
                 EmailSender.sendEmailWithCredentials(item.getEmail(), item.getLogin(), (String) form.getData());
@@ -101,8 +104,20 @@ public class CustomerView extends AbstractBasicModelView<Customer> {
     }
 
     @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Customer item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
+    }
+
+    @Override
     protected BeanItem<Customer> createNewBeanItem() {
-        return new BeanItem<Customer>(new Customer());
+        return new BeanItem<>(new Customer());
     }
 
     @Override

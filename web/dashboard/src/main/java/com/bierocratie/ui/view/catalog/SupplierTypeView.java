@@ -1,13 +1,10 @@
 package com.bierocratie.ui.view.catalog;
 
-import com.bierocratie.model.catalog.Beer;
 import com.bierocratie.model.catalog.SupplierType;
 import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 
 /**
@@ -19,7 +16,10 @@ import com.vaadin.navigator.ViewChangeListener;
  */
 public class SupplierTypeView extends AbstractBasicModelView<SupplierType> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SupplierTypeView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8335581787050896271L;
 
     @Override
     protected Class<SupplierType> getClazz() {
@@ -74,15 +74,27 @@ public class SupplierTypeView extends AbstractBasicModelView<SupplierType> {
     }
 
     @Override
-    protected void preSaveProcessing(SupplierType item) {
+    protected void preSaveItemProcessing(SupplierType item) {
     }
 
     @Override
-    protected void postSaveProcessing(SupplierType item) {
+    protected void postSaveItemProcessing(SupplierType item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(SupplierType item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

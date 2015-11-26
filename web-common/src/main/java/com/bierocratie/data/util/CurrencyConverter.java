@@ -14,7 +14,12 @@ import java.util.Locale;
  */
 public class CurrencyConverter extends StringToBigIntegerConverter {
 
-    @Override
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -9163436454639721905L;
+
+	@Override
     protected NumberFormat getFormat(Locale locale) {
         NumberFormat format = super.getFormat(locale);
         format.setGroupingUsed(true);

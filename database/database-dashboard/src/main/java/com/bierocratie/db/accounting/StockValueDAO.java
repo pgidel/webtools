@@ -1,10 +1,11 @@
 package com.bierocratie.db.accounting;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
+
+import com.bierocratie.db.persistence.PersistenceManager;
+
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
@@ -21,22 +22,9 @@ public class StockValueDAO {
 
     private static final String SELECT_STOCK = "SELECT s.amount FROM StockValue s WHERE s.year.year=:year";
 
-    private String persistenceUnitName = "dashboard";
-
-    @PostConstruct
-    public void init() {
-    }
-
-    public StockValueDAO(String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
-    }
-
-    public String getPersistenceUnitName() {
-        return persistenceUnitName;
-    }
+    private static final EntityManagerFactory entityManagerFactory = PersistenceManager.getInstance().getEntityManagerFactory();
 
     public BigDecimal getStockHTByYear(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_STOCK);

@@ -1,10 +1,7 @@
 package com.bierocratie.bean;
 
-import com.bierocratie.model.accounting.Tva;
 import com.bierocratie.model.catalog.Beer;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 /**

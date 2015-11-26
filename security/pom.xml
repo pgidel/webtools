@@ -7,23 +7,22 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>webtools</artifactId>
-        <version>1.0</version>
+        <version>${webtools.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>security</artifactId>
-    <version>1.0</version>
+    <version>${security.version}</version>
 
     <dependencies>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>database-common</artifactId>
-            <version>1.0</version>
+            <version>${database-common.version}</version>
         </dependency>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>model-common</artifactId>
-            <version>1.0</version>
+            <version>${model-common.version}</version>
         </dependency>
 
         <dependency>

@@ -7,18 +7,17 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>database</artifactId>
-        <version>1.0</version>
+        <version>${database.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>database-dashboard</artifactId>
-    <version>1.0</version>
+    <version>${database-dashboard.version}</version>
 
     <dependencies>
         <dependency>
             <groupId>com.bierocratie</groupId>
             <artifactId>model-dashboard</artifactId>
-            <version>1.0</version>
+            <version>${model-dashboard.version}</version>
         </dependency>
     </dependencies>
 

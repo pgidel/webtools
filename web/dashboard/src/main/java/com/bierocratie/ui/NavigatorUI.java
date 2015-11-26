@@ -1,16 +1,17 @@
 package com.bierocratie.ui;
 
 import com.bierocratie.db.accounting.InvoiceDAO;
+import com.bierocratie.db.persistence.PersistenceManager;
 import com.bierocratie.model.accounting.Category;
 import com.bierocratie.model.accounting.Tva;
 import com.bierocratie.model.catalog.Capacity;
 import com.bierocratie.model.catalog.SupplierType;
 import com.bierocratie.model.diffusion.Medium;
-import com.bierocratie.ui.view.dashboard.DashboardView;
 import com.bierocratie.ui.view.ErrorView;
 import com.bierocratie.ui.view.accounting.*;
 import com.bierocratie.ui.view.catalog.*;
 import com.bierocratie.ui.view.chat.ChatView;
+import com.bierocratie.ui.view.dashboard.DashboardView;
 import com.bierocratie.ui.view.diffusion.DiffusionView;
 import com.bierocratie.ui.view.diffusion.MediumView;
 import com.porotype.tinycon.Tinycon;
@@ -25,18 +26,17 @@ import com.vaadin.data.util.filter.Compare;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.*;
-import com.vaadin.server.communication.PushAtmosphereHandler;
-import com.vaadin.shared.communication.PushMode;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.Responsive;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
-import org.atmosphere.config.service.AtmosphereHandlerService;
 
+import javax.servlet.annotation.WebServlet;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Calendar;
-
-import javax.servlet.annotation.WebServlet;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,7 +52,11 @@ import javax.servlet.annotation.WebServlet;
 @Widgetset("com.bierocratie.ui.view.chat.ChatWidgetSet")
 public class NavigatorUI extends UI {
 
-    public static final String DASHBOARD_VIEW = "";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5250690888792419255L;
+	public static final String DASHBOARD_VIEW = "";
     public static final String BEER_VIEW = "biere";
     public static final String CASK_VIEW = "fut";
     public static final String SUPPLIER_VIEW = "fournisseurs";
@@ -153,6 +157,7 @@ public class NavigatorUI extends UI {
     protected void init(VaadinRequest request) {
         webNotification.requestPermission();
 
+        // TODO Créer les CSS
         Responsive.makeResponsive();
 
         Navigator navigator = new Navigator(this, this);
@@ -185,7 +190,12 @@ public class NavigatorUI extends UI {
         t.extend(this);
 
         UI.getCurrent().setErrorHandler(new DefaultErrorHandler() {
-            @Override
+            /**
+			 * 
+			 */
+			private static final long serialVersionUID = -615894631556635756L;
+
+			@Override
             public void error(com.vaadin.server.ErrorEvent event) {
                 Throwable throwableCause = null;
                 for (Throwable t = event.getThrowable(); t != null; t = t.getCause()) {
@@ -204,7 +214,7 @@ public class NavigatorUI extends UI {
         });
 
         try {
-            InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+            InvoiceDAO invoiceDAO = new InvoiceDAO();
             final JPAContainer<Tva> tvaEntities = JPAContainerFactory.make(Tva.class, "dashboard");
 
             tvaEntities.addContainerFilter(new Compare.Equal("rate", 0.196));
@@ -225,10 +235,20 @@ public class NavigatorUI extends UI {
         }
     }
 
-
     @WebServlet(value = "/*", asyncSupported = true)
     @VaadinServletConfiguration(productionMode = false, ui = NavigatorUI.class)
     public static class Servlet extends VaadinServlet {
+
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 5609038808232411088L;
+
+		@Override
+        public void destroy() {
+            PersistenceManager.getInstance().closeEntityManagerFactory();
+        }
+
     }
 
 }

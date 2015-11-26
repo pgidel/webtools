@@ -7,7 +7,7 @@
     <groupId>com.bierocratie</groupId>
     <artifactId>webtools</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>${webtools.version}</version>
     <modules>
         <module>model-common</module>
         <module>model</module>
@@ -22,11 +22,27 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
-        <vaadin.version>7.5.7</vaadin.version>
+        <webtools.version>1.1-SNAPSHOT</webtools.version>
+        <web-common.version>1.1-SNAPSHOT</web-common.version>
+        <web.version>1.1-SNAPSHOT</web.version>
+        <dashboard.version>1.1-SNAPSHOT</dashboard.version>
+        <orderhelper.version>1.1-SNAPSHOT</orderhelper.version>
+        <security.version>1.1-SNAPSHOT</security.version>
+        <model-common.version>1.1-SNAPSHOT</model-common.version>
+        <model.version>1.1-SNAPSHOT</model.version>
+        <model-dashboard.version>1.1-SNAPSHOT</model-dashboard.version>
+        <model-orderhelper.version>1.1-SNAPSHOT</model-orderhelper.version>
+        <database-common.version>1.1-SNAPSHOT</database-common.version>
+        <database.version>1.1-SNAPSHOT</database.version>
+        <database-dashboard.version>1.1-SNAPSHOT</database-dashboard.version>
+        <database-orderhelper.version>1.1-SNAPSHOT</database-orderhelper.version>
+
+        <vaadin.version>7.5.9</vaadin.version>
         <gwt.version>2.7.0</gwt.version>
         <vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
 
         <tableexport-for-vaadin.version>1.5.1.5</tableexport-for-vaadin.version>
+        <jasperreports.version>6.1.1</jasperreports.version>
         <chatbox.version>0.7.4</chatbox.version>
         <webnotifications.version>1.0.0</webnotifications.version>
         <tinycon.version>7.0.0</tinycon.version>
@@ -37,8 +53,8 @@
         <shiro-web.version>1.2.3</shiro-web.version>
         <shiro-core.version>1.2.3</shiro-core.version>
 
-        <sqlite-jdbc.version>3.8.10.2</sqlite-jdbc.version>
-        <eclipselink.version>2.6.0</eclipselink.version>
+        <sqlite-jdbc.version>3.8.11.2</sqlite-jdbc.version>
+        <eclipselink.version>2.6.1</eclipselink.version>
         <jpacontainer.version>3.2.0</jpacontainer.version>
     </properties>
     <repositories>
@@ -80,7 +96,7 @@
                     <configuration>
                         <url>http://brct:8080/manager/text</url>
                         <server>TomcatServer</server>
-                        <path>/${artifactId}</path>
+                        <path>/${project.artifactId}</path>
                     </configuration>
                 </plugin>
             </plugins>

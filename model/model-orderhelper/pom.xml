@@ -7,12 +7,11 @@
     <parent>
         <groupId>com.bierocratie</groupId>
         <artifactId>model</artifactId>
-        <version>1.0</version>
+        <version>${model.version}</version>
     </parent>
 
-    <groupId>com.bierocratie</groupId>
     <artifactId>model-orderhelper</artifactId>
-    <version>1.0</version>
+    <version>${model-orderhelper.version}</version>
 
     <dependencies>
 

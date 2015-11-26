@@ -10,4 +10,9 @@ import com.vaadin.ui.MenuBar;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractMenuBar extends MenuBar {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5017793498488314266L;
 }

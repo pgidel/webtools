@@ -1,28 +1,7 @@
 package com.bierocratie.ui.view.catalog;
 
-import com.bierocratie.model.accounting.Tva;
-import com.bierocratie.model.catalog.Beer;
-import com.bierocratie.model.catalog.Supplier;
-import com.bierocratie.ui.component.AbstractMenuBar;
-import com.bierocratie.ui.component.DashboardMenuBar;
-import com.bierocratie.ui.view.AbstractBasicModelView;
-import com.vaadin.addon.jpacontainer.EntityItem;
-import com.vaadin.addon.jpacontainer.JPAContainer;
-import com.vaadin.addon.jpacontainer.JPAContainerFactory;
-import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
-import com.vaadin.addon.tableexport.ExcelExport;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.data.util.filter.*;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Notification;
-
-import java.math.BigDecimal;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,7 +12,14 @@ import java.math.BigDecimal;
  */
 public class CaskView extends BeerView {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CaskView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4976325834772690559L;
+
+	public CaskView() {
+        table.sort(new Object[]{"brewery", "name", "capacity"}, new boolean[]{true, true, true});
+    }
 
     @Override
     protected String getTableName() {
@@ -42,18 +28,18 @@ public class CaskView extends BeerView {
 
     @Override
     protected void setTableColumns() {
-        entities.addNestedContainerProperty("capacity.name");
+        entities.addNestedContainerProperty("brewery.region");
 
-        table.setVisibleColumns(new String[]{"region", "brewery", "name", "style", "abv", "capacity.name", "supplier", "costHT", "available", "costingPriceTTC", "priceHT", "priceTTC"});
+        table.setVisibleColumns(new String[]{"brewery.region", "brewery", "name", "style", "abv", "capacity", "supplier", "costHT", "costingPriceHT", "costingPriceTTC", "priceHT", "priceTTC"});
         table.setColumnHeader("name", "Nom");
         table.setColumnHeader("style", "Style");
         table.setColumnHeader("brewery", "Brasserie");
-        table.setColumnHeader("region", "Origine");
+        table.setColumnHeader("brewery.region", "Origine");
         table.setColumnHeader("abv", "Degré Alcool");
-        table.setColumnHeader("capacity.name", "Volume");
+        table.setColumnHeader("capacity", "Volume");
         table.setColumnHeader("supplier", "Fournisseur");
         table.setColumnHeader("costHT", "Achat HT");
-        table.setColumnHeader("available", "Disponible");
+        table.setColumnHeader("costingPriceHT", "Tarif coûtant HT");
         table.setColumnHeader("costingPriceTTC", "Tarif coûtant TTC");
         table.setColumnHeader("priceHT", "Tarif HT");
         table.setColumnHeader("priceTTC", "Tarif TTC");
@@ -64,20 +50,44 @@ public class CaskView extends BeerView {
         super.enter(event);
 
         entities.addNestedContainerProperty("capacity.name");
-        entities.addContainerFilter(new And(new Not(new IsNull("capacity")), new Or(new Compare.Equal("capacity.name", "20L"),new Compare.Equal("capacity.name", "30L"))));
+        entities.addContainerFilter(new And(new Not(new IsNull("capacity")), new Or(new Compare.Equal("capacity.name", "20L"), new Compare.Equal("capacity.name", "30L"))));
 
-        Button excelExportButton = new Button("Exporter sous Excel");
-        excelExportButton.addClickListener(new Button.ClickListener() {
+        // TODO Export PDF
+        /*Button pdfExportButton = new Button("Exporter en PDF");
+        pdfExportButton.addClickListener(new Button.ClickListener() {
             public void buttonClick(final Button.ClickEvent event) {
-                ExcelExport excelExport = new ExcelExport(table);
-                String title = "Biérocratie - Fûts";
-                excelExport.setReportTitle(title);
-                // FIXME Pouvoir changer le nom
-                //excelExport.setExportFileName(title);
-                excelExport.export();
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("ReportTitle", "Basic JasperReport");
+                parameters.put("MaxSalary", new Double(25000.00));
+
+                JasperDesign jasperDesign = JasperFillManager.loadXmlDesign("BasicReport.xml");
+                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+// Second, create a map of parameters to pass to the report.
+
+// Third, get a database connection
+                Connection conn = Database.getConnection();
+// Fourth, create JasperPrint using fillReport() method
+                JasperPrint jasperPrint = JasperManager.fillReport(jasperReport, parameters, conn);
+// You can use JasperPrint to create PDF
+                JasperManager.printReportToPdfFile(jasperPrint, "BasicReport.pdf");
+                JasperRunManager.(jasperPrint, "BasicReport.pdf");
+// Or to view report in the JasperViewer
+                JasperViewer.viewReport(jasperPrint);
+
+                String pdfFileName = "futs.pdf";
+
+                String sourceFileName = "demo.jrxml";
+
+                System.out.println("Compiling Report Design ...");
+                try {
+                    JasperCompileManager.compileReportToFile(sourceFileName);
+                } catch (JRException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Done compiling!!! ...");
             }
         });
-        addComponent(excelExportButton);
+        addComponent(pdfExportButton);*/
     }
 
 }

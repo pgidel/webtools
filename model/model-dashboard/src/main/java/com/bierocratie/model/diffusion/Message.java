@@ -19,7 +19,12 @@ import java.util.List;
 @Table(name = "message")
 public class Message implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6386991728380354155L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

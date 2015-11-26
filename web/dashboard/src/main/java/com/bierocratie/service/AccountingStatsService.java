@@ -7,7 +7,6 @@ import com.bierocratie.db.accounting.StockValueDAO;
 import com.bierocratie.model.accounting.BudgetYear;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.SQLException;
 
 /**
@@ -21,11 +20,11 @@ public class AccountingStatsService {
 
     // TODO
     //@Inject
-    private static StockValueDAO stockValueDAO = new StockValueDAO("dashboard");
+    private static StockValueDAO stockValueDAO = new StockValueDAO();
     //@Inject
-    private static InvoiceDAO invoiceDAO = new InvoiceDAO("dashboard");
+    private static InvoiceDAO invoiceDAO = new InvoiceDAO();
     //@Inject
-    private static IncomeDAO incomeDAO = new IncomeDAO("dashboard");
+    private static IncomeDAO incomeDAO = new IncomeDAO();
 
     public static AccountingStatsBean getStats(BudgetYear budgetYear) throws SQLException {
         BigDecimal turnoverHT = incomeDAO.getSumIncomesHTByYear(budgetYear.getYear());

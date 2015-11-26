@@ -5,14 +5,10 @@ import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 
 @SuppressWarnings("serial")
 public class TvaView extends AbstractBasicModelView<Tva> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(TvaView.class);
 
     @Override
     protected Class<Tva> getClazz() {
@@ -67,15 +63,27 @@ public class TvaView extends AbstractBasicModelView<Tva> {
     }
 
     @Override
-    protected void preSaveProcessing(Tva item) {
+    protected void preSaveItemProcessing(Tva item) {
     }
 
     @Override
-    protected void postSaveProcessing(Tva item) {
+    protected void postSaveItemProcessing(Tva item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Tva item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

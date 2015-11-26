@@ -8,9 +8,7 @@ import com.vaadin.data.util.BeanItem;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.ComboBox;
 
-@SuppressWarnings("serial")
 public class CapacityView extends AbstractBasicModelView<Capacity> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CapacityView.class);
@@ -31,8 +29,6 @@ public class CapacityView extends AbstractBasicModelView<Capacity> {
         return new OrderMenuBar();
     }
 
-    private ComboBox comboBox;
-
     @Override
     protected void buildAndBind() {
         form.addComponent(binder.buildAndBind("Nom", "title"));
@@ -51,7 +47,7 @@ public class CapacityView extends AbstractBasicModelView<Capacity> {
 
     @Override
     protected BeanItem<Capacity> createNewBeanItem() {
-        return new BeanItem<Capacity>(new Capacity());
+        return new BeanItem<>(new Capacity());
     }
 
     @Override
@@ -81,11 +77,23 @@ public class CapacityView extends AbstractBasicModelView<Capacity> {
     }
 
     @Override
-    protected void preSaveProcessing(Capacity item) {
+    protected void preSaveItemProcessing(Capacity item) {
     }
 
     @Override
-    protected void postSaveProcessing(Capacity item) {
+    protected void postSaveItemProcessing(Capacity item) {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Capacity item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

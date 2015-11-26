@@ -1,11 +1,7 @@
 package com.bierocratie.ui.view.chat;
 
-import com.bierocratie.ui.NavigatorUI;
 import com.vaadin.external.org.slf4j.Logger;
 import com.vaadin.external.org.slf4j.LoggerFactory;
-import com.vaadin.server.Page;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import org.vaadin.chatbox.SharedChat;
 import org.vaadin.chatbox.client.ChatLine;
 
@@ -25,7 +21,7 @@ public class SentNotifier implements SharedChat.ChatListener {
 
     private static final Logger LOG = LoggerFactory.getLogger(SentNotifier.class);
 
-    private final static long DELAY = 60*1000;
+    private final static long DELAY = 60 * 1000;
 
     private final static SimpleDateFormat longFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm z");
     private final Timer timer = new Timer();
@@ -57,10 +53,11 @@ public class SentNotifier implements SharedChat.ChatListener {
             @Override
             public void run() {
                 if (decrements() == 0) {
-                    String date = longFormat.format(new Date(new Date().getTime()-DELAY));
+                    String date = longFormat.format(new Date(new Date().getTime() - DELAY));
                     chat.addLine("Envoyé le " + date);
                 }
-            }}, DELAY);
+            }
+        }, DELAY);
     }
 
 

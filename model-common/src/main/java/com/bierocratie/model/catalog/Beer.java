@@ -1,12 +1,8 @@
 package com.bierocratie.model.catalog;
 
-import com.bierocratie.model.accounting.Tva;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,17 +25,14 @@ public class Beer {
     @Lob
     private String description;
 
-    private String region;
-
     private String style;
 
     private double abv;
 
     @NotNull
-    @ManyToOne
     private Supplier brewery;
 
-    @ManyToOne
+    @NotNull
     private Supplier supplier;
 
     @NotNull
@@ -49,13 +42,13 @@ public class Beer {
 
     private BigDecimal costHT;
 
+    private BigDecimal costingPriceHT;
+
     private BigDecimal costingPriceTTC;
 
     private BigDecimal priceHT;
 
     private BigDecimal priceTTC;
-
-    private Tva tva;
 
     @Override
     public String toString() {
@@ -116,14 +109,6 @@ public class Beer {
         this.name = name;
     }
 
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
     public String getStyle() {
         return style;
     }
@@ -172,6 +157,14 @@ public class Beer {
         this.costHT = costHT;
     }
 
+    public BigDecimal getCostingPriceHT() {
+        return costingPriceHT;
+    }
+
+    public void setCostingPriceHT(BigDecimal costingPriceHT) {
+        this.costingPriceHT = costingPriceHT;
+    }
+
     public BigDecimal getCostingPriceTTC() {
         return costingPriceTTC;
     }
@@ -194,14 +187,6 @@ public class Beer {
 
     public void setPriceTTC(BigDecimal priceTTC) {
         this.priceTTC = priceTTC;
-    }
-
-    public Tva getTva() {
-        return tva;
-    }
-
-    public void setTva(Tva tva) {
-        this.tva = tva;
     }
 
     public String getLabel() {

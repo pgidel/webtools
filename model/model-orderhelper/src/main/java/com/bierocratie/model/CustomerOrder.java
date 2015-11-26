@@ -21,7 +21,12 @@ import java.util.List;
 @Table(name = "customerorder")
 public class CustomerOrder implements Serializable {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6288098071351019025L;
+
+	@Id
     @GeneratedValue
     private Long id;
 

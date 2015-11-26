@@ -11,14 +11,4 @@ package com.bierocratie.db;
 //@UIScoped
 public class OrderDAO {
 
-    private String persistenceUnitName;
-
-    public OrderDAO(String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
-    }
-
-    public String getPersistenceUnitName() {
-        return persistenceUnitName;
-    }
-
 }

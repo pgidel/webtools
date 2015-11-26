@@ -19,7 +19,12 @@ import java.util.Date;
 @Table(name = "invoice")
 public class Invoice implements Serializable {
 
-    public static final String DEFAULT_MONTH = "-";
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8942925518737979101L;
+
+	public static final String DEFAULT_MONTH = "-";
 
     @Id
     @GeneratedValue

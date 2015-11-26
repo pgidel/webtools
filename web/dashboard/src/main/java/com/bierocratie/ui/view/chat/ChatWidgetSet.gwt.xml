@@ -4,9 +4,9 @@
         goal "vaadin:update-widgetset".
     -->
 
-    <inherits name="com.vaadin.DefaultWidgetSet" />
+    <inherits name="com.vaadin.DefaultWidgetSet"/>
 
-    <inherits name="org.vaadin.chatbox.WidgetSet" />
+    <inherits name="org.vaadin.chatbox.WidgetSet"/>
 
 
     <!--
@@ -39,5 +39,5 @@
      -->
     <!-- <set-configuration-property name="devModeRedirectEnabled" value="true" /> -->
 
-    <inherits name="com.bierocratie.ui.view.chat.ChatWidgetSetDev" />
+    <inherits name="com.bierocratie.ui.view.chat.ChatWidgetSetDev"/>
 </module>

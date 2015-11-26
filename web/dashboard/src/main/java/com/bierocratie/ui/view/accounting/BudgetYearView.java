@@ -1,21 +1,20 @@
 package com.bierocratie.ui.view.accounting;
 
 import com.bierocratie.model.accounting.BudgetYear;
-import com.bierocratie.model.catalog.Capacity;
 import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
 import com.vaadin.navigator.ViewChangeListener;
 
-@SuppressWarnings("serial")
 public class BudgetYearView extends AbstractBasicModelView<BudgetYear> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BudgetYearView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6033835323058021264L;
 
-    @Override
+	@Override
     protected Class<BudgetYear> getClazz() {
         return BudgetYear.class;
     }
@@ -74,15 +73,27 @@ public class BudgetYearView extends AbstractBasicModelView<BudgetYear> {
     }
 
     @Override
-    protected void preSaveProcessing(BudgetYear item) {
+    protected void preSaveItemProcessing(BudgetYear item) {
     }
 
     @Override
-    protected void postSaveProcessing(BudgetYear item) {
+    protected void postSaveItemProcessing(BudgetYear item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(BudgetYear item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override

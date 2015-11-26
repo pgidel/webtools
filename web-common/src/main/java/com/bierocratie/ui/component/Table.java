@@ -18,7 +18,11 @@ import java.util.Date;
  */
 public class Table extends com.vaadin.ui.Table {
 
-    public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4340997217320528325L;
+	public static final SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd/MM/yyyy");
     public static final NumberFormat doubleFormatter = NumberFormat.getNumberInstance();
     public static final NumberFormat integerFormatter = NumberFormat.getNumberInstance();
 

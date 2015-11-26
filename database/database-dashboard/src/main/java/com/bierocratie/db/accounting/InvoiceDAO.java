@@ -1,5 +1,6 @@
 package com.bierocratie.db.accounting;
 
+import com.bierocratie.db.persistence.PersistenceManager;
 import com.bierocratie.model.accounting.BudgetYear;
 import com.bierocratie.model.accounting.CategoryAndMonth;
 import com.bierocratie.model.accounting.Invoice;
@@ -71,20 +72,11 @@ public class InvoiceDAO {
     private static final String SELECT_SUM_STOCK_INVOICES_HT_BY_YEAR = "select sum(i.amount/(1+i.tva.rate)) from Invoice i inner join BudgetYear b on b.firstMonth<=substring(i.d,0,5) and b.lastMonth>=substring(i.d,0,5) AND b.year=:year WHERE i.category.name='Achat stock'";
 
     private static final String SELECT_SUM_CURRENT_INVOICES_BY_YEAR = "select sum(i.amount) from Invoice i inner join BudgetYear b on b.firstMonth<=i.month and :currentMonth>=i.month AND b.year=:year";
-    private static final String SELECT_SUM_CURRENT_INVOICES_HT_BY_YEAR = "select sum(i.amount/(1+i.tva.rate)) from Invoice i inner join BudgetYear b on :currentMonth<=substring(i.d,0,5) and b.lastMonth>=substring(i.d,0,5) AND b.year=:year";
+    private static final String SELECT_SUM_CURRENT_INVOICES_HT_BY_YEAR = "select sum(i.amount/(1+i.tva.rate)) from Invoice i inner join BudgetYear b on b.firstMonth<=substring(i.d,0,5) and :currentMonth>=substring(i.d,0,5) AND b.year=:year";
 
-    private String persistenceUnitName = "dashboard";
-
-    public InvoiceDAO(String persistenceUnitName) {
-        this.persistenceUnitName = persistenceUnitName;
-    }
-
-    public String getPersistenceUnitName() {
-        return persistenceUnitName;
-    }
+    private static final EntityManagerFactory entityManagerFactory = PersistenceManager.getInstance().getEntityManagerFactory();
 
     public Invoice find(String date, String supplier, BigDecimal amount) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Invoice> criteriaQuery = criteriaBuilder.createQuery(Invoice.class);
@@ -104,7 +96,6 @@ public class InvoiceDAO {
     }
 
     public List<String> getMonthsByYearForCash(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_MONTHS_BY_YEAR_FOR_CASH);
@@ -115,7 +106,6 @@ public class InvoiceDAO {
     }
 
     public List<String> getMonthsByYearForOperating(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_MONTHS_BY_YEAR_FOR_OPERATING);
@@ -126,7 +116,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getAmountsByMonthForCash(String month) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_TOTAL_BY_CATEGORY_AND_MONTH);
@@ -143,7 +132,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getAmountsByYearForCash(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_TOTAL_BY_CATEGORY_AND_YEAR);
@@ -160,7 +148,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getAmountsByYearForOperating(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_TOTAL_HT_BY_CATEGORY_AND_YEAR);
@@ -177,7 +164,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getCurrentAmountsByYearForCash(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_CURRENT_TOTAL_BY_CATEGORY_AND_YEAR);
@@ -196,7 +182,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getCurrentAmountsByYearForOperating(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_CURRENT_TOTAL_HT_BY_CATEGORY_AND_YEAR);
@@ -215,7 +200,6 @@ public class InvoiceDAO {
     }
 
     public List<CategoryAndMonth> getAmountsHTByMonthForOperating(String month) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_TOTAL_HT_BY_CATEGORY_AND_DATE);
@@ -232,7 +216,6 @@ public class InvoiceDAO {
     }
 
     public Map<String, BigInteger> getSumInvoiceByMonthForCash() throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Map<String, BigInteger> results = new HashMap<>();
@@ -258,7 +241,6 @@ public class InvoiceDAO {
     }
 
     public Map<String, BigInteger> getSumInvoiceByMonthForOperating() throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Map<String, BigInteger> results = new HashMap<>();
@@ -284,7 +266,6 @@ public class InvoiceDAO {
     }
 
     public void updateTVAByDefault(Tva tva196, Tva tva200, Date date) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         EntityTransaction tx = entityManager.getTransaction();
@@ -302,7 +283,6 @@ public class InvoiceDAO {
     }
 
     public BigDecimal getSumStockInvoicesHTByYear(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_SUM_STOCK_INVOICES_HT_BY_YEAR);
@@ -314,7 +294,6 @@ public class InvoiceDAO {
     }
 
     public BigDecimal getSumStockInvoicesByYear(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_SUM_STOCK_INVOICES_BY_YEAR);
@@ -326,7 +305,6 @@ public class InvoiceDAO {
     }
 
     public BigDecimal getSumCurrentInvoicesHTByYear(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_SUM_CURRENT_INVOICES_HT_BY_YEAR);
@@ -339,7 +317,6 @@ public class InvoiceDAO {
     }
 
     public BigDecimal getSumCurrentInvoicesByYear(String year) throws SQLException {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(persistenceUnitName);
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         Query query = entityManager.createQuery(SELECT_SUM_CURRENT_INVOICES_BY_YEAR);

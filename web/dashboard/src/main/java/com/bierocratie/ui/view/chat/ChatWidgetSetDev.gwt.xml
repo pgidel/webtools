@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module rename-to="com.bierocratie.ui.view.chat.ChatWidgetSet">
-    <inherits name="com.bierocratie.ui.view.chat.ChatWidgetSet" />
+    <inherits name="com.bierocratie.ui.view.chat.ChatWidgetSet"/>
 
-    <set-property name="user.agent" value="gecko1_8" />
+    <set-property name="user.agent" value="gecko1_8"/>
     <collapse-all-properties/>
 
-    <inherits name="org.vaadin.chatbox.WidgetSet" />
+    <inherits name="org.vaadin.chatbox.WidgetSet"/>
 
-    <inherits name="com.vaadin.DefaultWidgetSet" />
+    <inherits name="com.vaadin.DefaultWidgetSet"/>
 </module>

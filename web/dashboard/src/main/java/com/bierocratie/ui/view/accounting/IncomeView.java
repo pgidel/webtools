@@ -1,29 +1,21 @@
 package com.bierocratie.ui.view.accounting;
 
+import com.bierocratie.model.accounting.BudgetYear;
 import com.bierocratie.model.accounting.Income;
 import com.bierocratie.model.accounting.Tva;
-import com.bierocratie.model.accounting.BudgetYear;
 import com.bierocratie.ui.component.AbstractMenuBar;
 import com.bierocratie.ui.component.DashboardMenuBar;
 import com.bierocratie.ui.view.AbstractBasicModelView;
 import com.vaadin.addon.jpacontainer.JPAContainer;
 import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.addon.jpacontainer.fieldfactory.SingleSelectConverter;
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
 import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.filter.Compare;
-import com.vaadin.external.org.slf4j.Logger;
-import com.vaadin.external.org.slf4j.LoggerFactory;
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.VerticalLayout;
 
-@SuppressWarnings("serial")
 /*public class IncomeView extends VerticalLayout implements View {
 
     public IncomeView() {
@@ -60,9 +52,12 @@ import com.vaadin.ui.VerticalLayout;
 }*/
 public class IncomeView extends AbstractBasicModelView<Income> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(IncomeView.class);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5386653576461985731L;
 
-    public IncomeView() {
+	public IncomeView() {
         table.sort(new Object[]{"month"}, new boolean[]{false});
         table.setPageLength(24);
     }
@@ -111,7 +106,7 @@ public class IncomeView extends AbstractBasicModelView<Income> {
         tvaComboBox.setItemCaptionMode(AbstractSelect.ItemCaptionMode.PROPERTY);
         tvaComboBox.setItemCaptionPropertyId("rate2String");
         tvaComboBox.setConverter(new SingleSelectConverter<Tva>(tvaComboBox));
-        tvaComboBox.setFilteringMode(FilteringMode.CONTAINS);
+        tvaComboBox.setTextInputAllowed(false);
         tvaComboBox.setImmediate(true);
         binder.bind(tvaComboBox, "tva");
         form.addComponent(tvaComboBox);
@@ -132,13 +127,14 @@ public class IncomeView extends AbstractBasicModelView<Income> {
 
         final JPAContainer<Tva> tvas = JPAContainerFactory.make(Tva.class, "dashboard");
         tvas.addContainerFilter(new Compare.Equal("rate", 0.2));
-        Object idTva = tvas.firstItemId();
+        Tva tva = tvas.getItem(tvas.firstItemId()).getEntity();
+
         final JPAContainer<BudgetYear> years = JPAContainerFactory.make(BudgetYear.class, "dashboard");
         years.addContainerFilter(new Compare.LessOrEqual("firstMonth", BudgetYear.getCurrentMonth()));
         years.addContainerFilter(new Compare.GreaterOrEqual("lastMonth", BudgetYear.getCurrentMonth()));
-        Object idYear = years.firstItemId();
+        BudgetYear year = years.getItem(years.firstItemId()).getEntity();
 
-        income = new Income(tvas.getItem(idTva).getEntity(), years.getItem(idYear).getEntity());
+        income = new Income(tva, year);
 
         tvas.removeAllContainerFilters();
         years.removeAllContainerFilters();
@@ -172,15 +168,27 @@ public class IncomeView extends AbstractBasicModelView<Income> {
     }
 
     @Override
-    protected void preSaveProcessing(Income item) {
+    protected void preSaveItemProcessing(Income item) {
     }
 
     @Override
-    protected void postSaveProcessing(Income item) {
+    protected void postSaveItemProcessing(Income item) {
     }
 
     @Override
     protected void createMultiSelectForm() {
+    }
+
+    @Override
+    protected void getMultiFormValues() {
+    }
+
+    @Override
+    protected void setItemValues(Income item) {
+    }
+
+    @Override
+    protected void postSaveItemsProcessing() {
     }
 
     @Override
